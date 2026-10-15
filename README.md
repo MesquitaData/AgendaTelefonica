@@ -7,9 +7,9 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   2. DAO [X]
   4. VO [X]
   5. Observer[x]
-  6. Lazy Loading
+  6. Lazy Loading [X]
     - Voce so carrega as informações quando for solicitado
-  7. Fachada
+  7. Fachada[x]
     ```python
         # DAO (Data Access Object)
     class UsuarioDAO:
@@ -77,7 +77,7 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   11. command
   12. singleton
   13. template method
-  14. BO (business object)
+  14. BO (business object) [X]
   15. decorate
   16. adapter
   17. synchronizer token

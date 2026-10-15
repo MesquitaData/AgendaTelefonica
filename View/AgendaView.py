@@ -1,4 +1,6 @@
-from Controller.AgendaController import AgendaController, Observer
+from Controller.AgendaController import AgendaController
+from Models.observer.Observer import Observer
+
 
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
@@ -7,7 +9,7 @@ class AgendaConsoleView(Observer):
         # O programa inicia na agenda Pessoal por padrão
         self.nome_agenda = "Pessoal"
         self.controller = AgendaController(self.nome_agenda)
-        self.controller.inscrever(self)
+        self.controller.agenda_facade.inscrever(self)
 
     def atualizar(self, evento: str, dados=None):
         """Este método é chamado automaticamente pelo Controller sempre que algo muda."""
