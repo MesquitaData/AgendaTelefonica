@@ -1,7 +1,7 @@
 import json
 import os
-from Models.ContatoVO import ContatoVO
-from Models.AgendaVO import AgendaVO
+from Models.VO.ContatoVO import ContatoVO
+from Models.VO.AgendaVO import AgendaVO
 
 
 class AgendaDAO:
