@@ -1,5 +1,5 @@
 import random
-
+from Controller.Validadores.CadeiaResp import criar_cadeia
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
 
@@ -16,10 +16,14 @@ class AgendaBo:
         return self._dao
 
     def adicionar_contato(self, nome, telefone, email):
+        cadeia = criar_cadeia()
         if not nome or not telefone:
             return False
-        id_contato: int = random.randint(1000, 9999)
+        id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
         novo_contato = ContatoVO(id_contato, nome, telefone, email)
+        erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
+        if erro:
+            return erro
         self._agenda_ativa.contatos.append(novo_contato)
         self.dao.salvar_agenda(self._agenda_ativa)
         return novo_contato

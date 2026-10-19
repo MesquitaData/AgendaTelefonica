@@ -39,9 +39,16 @@ class AgendaFacade(Subject):
 
         novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, email)
 
-        # O OBSERVER ENTRA AQUI: Notifica que um contato foi adicionado
+        # Se o Business Object retornar uma mensagem de erro,
+        # não notifica os observadores.
+        if isinstance(novo_contato, str):
+            return novo_contato
+
+        if not novo_contato:
+            return False
+
         self.notificar("contato_adicionado", novo_contato)
-        return True
+        return novo_contato
 
     def excluir_contato(self, id_contato):
         # contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]

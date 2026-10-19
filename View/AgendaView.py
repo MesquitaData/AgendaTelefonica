@@ -1,7 +1,6 @@
 from Controller.AgendaController import AgendaController
 from Models.observer.Observer import Observer
 
-
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
 
@@ -68,8 +67,16 @@ class AgendaConsoleView(Observer):
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
 
-        if self.controller.adicionar_contato(nome, telefone, email):
+        resultado = self.controller.adicionar_contato(
+            nome, telefone, email
+        )
+
+        if isinstance(resultado, str):
+            print(f"Erro: {resultado}")
+
+        elif resultado:
             print("\n✅ Contato adicionado com sucesso!")
+
         else:
             print("\n⚠️ Erro: Nome e Telefone são obrigatórios.")
 

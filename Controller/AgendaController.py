@@ -1,5 +1,5 @@
 from Models.facade.AgendaFacade import AgendaFacade
-
+from Controller.Validadores.CadeiaResp import criar_cadeia
 
 # class Observer:
 #     """Interface que todo observador deve implementar."""
