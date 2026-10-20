@@ -1,12 +1,10 @@
 from random import Random
-
 from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
-
 from Models.VO.ContatoVO import ContatoVO
 from Models.observer.Observer import Subject
-
+from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
 class AgendaFacade(Subject):
     def __init__(self, nome_agenda: str = "Pessoal"):
@@ -27,6 +25,27 @@ class AgendaFacade(Subject):
         if self._agenda_bo is None:
             self._agenda_bo = AgendaBo(self._nome_agenda)
         return self._agenda_bo
+
+    def importar_contatos_txt(self, caminho_arquivo):
+        try:
+            adapter = TXTContatoAdapter()
+            contatos = adapter.adaptar(caminho_arquivo)
+
+            if not contatos:
+                return False
+
+            # Adiciona cada contato utilizando as regras e a persistência já existentes no sistema.
+            for contato in contatos:
+                resultado = self.adicionar_contato(contato.nome,contato.telefone,contato.email)
+
+                # Se houver erro de validação ou inclusão, interrompe a importação.
+                if isinstance(resultado, str) or not resultado:
+                    return False
+
+            return True
+
+        except (OSError, ValueError, KeyError, TypeError):
+            return False
 
     def adicionar_contato(self, nome, telefone, email):
         # if not nome or not telefone:

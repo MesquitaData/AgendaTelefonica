@@ -30,6 +30,9 @@ class AgendaController:  # Herda de Subject
         self.agenda_facade = AgendaFacade()
         # self.agenda_ativa = self.dao.obter_agenda(nome_agenda)
 
+    def importar_contatos_txt(self, caminho_arquivo):
+        return self.agenda_facade.importar_contatos_txt(caminho_arquivo)
+
     def adicionar_contato(self, nome, telefone, email=""):
         return self.agenda_facade.adicionar_contato(nome, telefone, email)
         # if not nome or not telefone:

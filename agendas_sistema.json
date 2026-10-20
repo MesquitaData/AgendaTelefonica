@@ -4,26 +4,26 @@
         "contatos": [
             {
                 "id": 1,
-                "nome": "Gabriel",
-                "telefone": "999144404",
-                "email": "lakersmvp"
+                "nome": "Maria Silva",
+                "telefone": "(87) 99999-1111",
+                "email": "maria@email.com"
             },
             {
                 "id": 2,
-                "nome": "Lucas Silva",
-                "telefone": "98988",
-                "email": "ls"
+                "nome": "João Santos",
+                "telefone": "(87) 98888-2222",
+                "email": "joao@email.com"
             },
             {
-                "id": 8383,
-                "nome": "Gabriel Mesquita",
-                "telefone": "87999144404",
-                "email": ""
+                "id": 3,
+                "nome": "Pedro Souza",
+                "telefone": "(87) 97777-3333",
+                "email": "pedro@email.com"
             },
             {
                 "id": 4,
-                "nome": "Nicolau",
-                "telefone": "87987654431",
+                "nome": "Gabriel Mesquita Gomes",
+                "telefone": "(87) 99914-4009",
                 "email": ""
             }
         ]
