@@ -18,21 +18,9 @@ class AgendaController:  # Herda de Subject
 
     def adicionar_contato(self, nome, telefone, email=""):
         return self.agenda_facade.adicionar_contato(nome, telefone, email)
-        # if not nome or not telefone:
-        #     return False
-        #
-        # proximo_id = max([c.id for c in self.agenda_ativa.contatos], default=0) + 1
-        # novo_contato = ContatoVO(proximo_id, nome, telefone, email)
-        # self.agenda_ativa.contatos.append(novo_contato)
-        # self.dao.salvar_agenda(self.agenda_ativa)
-        #
-        # # O OBSERVER ENTRA AQUI: Notifica que um contato foi adicionado
-        # self.notificar("contato_adicionado", novo_contato)
-        # return True
 
     def excluir_contato(self, id_contato):
         return self.agenda_facade.excluir_contato(id_contato)
-
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
