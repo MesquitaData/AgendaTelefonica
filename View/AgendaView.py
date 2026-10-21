@@ -9,7 +9,7 @@ class AgendaConsoleView(Observer):
         # O programa inicia na agenda Pessoal por padrão
         self.nome_agenda = "Pessoal"
         self.controller = AgendaController(self.nome_agenda)
-        self.controller.agenda_facade.inscrever(self)
+        self.controller.inscrever_observador(self)
 
     def atualizar(self, evento: str, dados=None):
         """Este método é chamado automaticamente pelo Controller sempre que algo muda."""
@@ -59,6 +59,7 @@ class AgendaConsoleView(Observer):
             self.nome_agenda = nova_agenda
             # O Controller simplesmente carrega o novo estado a partir do DAO
             self.controller = AgendaController(self.nome_agenda)
+            self.controller.inscrever_observador(self)
             print(f"\n🔄 Você mudou para a agenda: '{self.nome_agenda}'")
         else:
             print("\n⚠️ Nome inválido.")

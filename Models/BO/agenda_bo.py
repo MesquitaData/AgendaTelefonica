@@ -32,7 +32,7 @@ class AgendaBo:
 
         self._agenda_ativa.contatos = contatos_filtrados
         self.dao.salvar_agenda(self._agenda_ativa)
-        return None
+        return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
