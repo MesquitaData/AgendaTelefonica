@@ -11,14 +11,6 @@ class AgendaFacade(Subject):
         super().__init__()
         self._nome_agenda = nome_agenda
         self._agenda_bo = None
-    #     self._dao = None
-    #     self._agenda_ativa = self.dao.obter_agenda(nome_agenda)
-    #
-    # @property
-    # def dao(self):
-    #     if self._dao is None:
-    #         self._dao = AgendaDAO()
-    #     return self._dao
 
     @property
     def agenda_bo(self):
@@ -48,13 +40,6 @@ class AgendaFacade(Subject):
             return False
 
     def adicionar_contato(self, nome, telefone, email):
-        # if not nome or not telefone:
-        #     return False
-        #
-        # proximo_id = Random.randint(self,1000, 9999)
-        # novo_contato = ContatoVO(proximo_id, nome, telefone, email)
-        # self._agenda_ativa.contatos.append(novo_contato)
-        # self.dao.salvar_agenda(self._agenda_ativa)
 
         novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, email)
 
@@ -70,20 +55,14 @@ class AgendaFacade(Subject):
         return novo_contato
 
     def excluir_contato(self, id_contato):
-        # contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]
-        #
-        # if len(self._agenda_ativa.contatos) == len(contatos_filtrados):
-        #     return False
-        #
-        # self._agenda_ativa.contatos = contatos_filtrados
-        # self.dao.salvar_agenda(self._agenda_ativa)
-
-        # O OBSERVER ENTRA AQUI: Notifica que um contato foi removido
 
         self.agenda_bo.excluir_contato(id_contato)
 
-        self.notificar("contato_excluido", id_contato)
-        return True
+        if self.agenda_bo:
+            self.notificar("contato_excluido", id_contato)
+            return True
+
+        return False
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):

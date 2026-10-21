@@ -81,7 +81,4 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   15. decorate
   16. adapter [X]
   17. synchronizer token
-  18. value holder
-  19. ghost
-  20. virtual proxy
 ## Funcionalidades
