@@ -13,8 +13,22 @@ class AgendaController:  # Herda de Subject
     def desiscrever_observador(self, observador: Observer):
         self.agenda_facade.inscrever(observador)
 
+    def importar_contatos_txt(self, caminho_arquivo):
+        return self.agenda_facade.importar_contatos_txt(caminho_arquivo)
+
     def adicionar_contato(self, nome, telefone, email=""):
         return self.agenda_facade.adicionar_contato(nome, telefone, email)
+        # if not nome or not telefone:
+        #     return False
+        #
+        # proximo_id = max([c.id for c in self.agenda_ativa.contatos], default=0) + 1
+        # novo_contato = ContatoVO(proximo_id, nome, telefone, email)
+        # self.agenda_ativa.contatos.append(novo_contato)
+        # self.dao.salvar_agenda(self.agenda_ativa)
+        #
+        # # O OBSERVER ENTRA AQUI: Notifica que um contato foi adicionado
+        # self.notificar("contato_adicionado", novo_contato)
+        # return True
 
     def excluir_contato(self, id_contato):
         return self.agenda_facade.excluir_contato(id_contato)

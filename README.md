@@ -72,13 +72,13 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
 
     ```
   8. Abstract Factory
-  9. Chain of responsibility
+  9. Chain of responsibility [X]
   10. memento
   11. command
   12. singleton
   13. template method
   14. BO (business object) [X]
   15. decorate
-  16. adapter
+  16. adapter [X]
   17. synchronizer token
 ## Funcionalidades
