@@ -24,6 +24,10 @@ class AgendaBo:
         erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
         if erro:
             return erro
+        # Ideia provisoria - talvez dê pra colocar no validador
+        is_empty = lambda contatos:len(contatos) == 0
+        if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
+            return "Este contanto já exite nesta agenda !"
         self._agenda_ativa.contatos.append(novo_contato)
         self.dao.salvar_agenda(self._agenda_ativa)
         return novo_contato
