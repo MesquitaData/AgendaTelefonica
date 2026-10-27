@@ -3,7 +3,6 @@ from Controller.Validadores.CadeiaResp import criar_cadeia
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
 
-
 class AgendaBo:
     def __init__(self, nome_agenda):
         self._dao = None

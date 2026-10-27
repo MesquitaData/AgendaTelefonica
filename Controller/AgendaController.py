@@ -1,6 +1,6 @@
 from Models.facade.AgendaFacade import AgendaFacade
 from Models.observer.Observer import Observer
-
+from Models.command.ListarContatosCommand import ListarContatosCommand
 
 class AgendaController:  # Herda de Subject
     def __init__(self, nome_agenda="Pessoal"):
@@ -23,9 +23,12 @@ class AgendaController:  # Herda de Subject
         return self.agenda_facade.excluir_contato(id_contato)
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
+    # def listar_contatos(self):
+    #    return self.agenda_facade.listar_contatos()
+
     def listar_contatos(self):
-        return self.agenda_facade.listar_contatos()
+        comando = ListarContatosCommand(self.agenda_facade)
+        return comando.executar()
 
     def buscar_contatos(self, termo):
         return self.agenda_facade.buscar_contatos(termo)
-
