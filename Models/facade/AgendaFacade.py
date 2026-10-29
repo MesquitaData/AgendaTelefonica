@@ -3,6 +3,7 @@ from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Models.observer.Observer import Subject
 from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
@@ -65,9 +66,37 @@ class AgendaFacade(Subject):
         return False
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-    def listar_contatos(self):
-        return self.agenda_bo.listar_contatos()
+    # def listar_contatos(self):
+    #     return self.agenda_bo.listar_contatos()
+    #
+    # def buscar_contatos(self, termo):
+    #     termo = termo.lower()
+    #     return self.agenda_bo.buscar_contatos(termo)
 
-    def buscar_contatos(self, termo):
-        termo = termo.lower()
-        return self.agenda_bo.buscar_contatos(termo)
+    def buscar_contatos(self, nome = None, telefone = None, email = None):
+
+        todos_os_contatos = BuscarTodosContatos(self.agenda_bo)
+
+        if nome is not None:
+            if telefone is not None:
+                if email is not None:
+                    return FiltrarPorEmail(FiltrarPorTelefone(FiltrarPorNome(todos_os_contatos, nome), telefone), email)
+                return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
+            return FiltrarPorNome(todos_os_contatos, nome)
+
+        if telefone is not None:
+            if nome is not None:
+                if email is not None:
+                    return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
+                return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
+            return FiltrarPorTelefone(todos_os_contatos, telefone)
+
+        if email is not None:
+            if telefone is not None:
+                if nome is not None:
+                    return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
+                return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
+            return FiltrarPorEmail(todos_os_contatos, email)
+
+        return todos_os_contatos
+
