@@ -1,6 +1,6 @@
 from Models.facade.AgendaFacade import AgendaFacade
 from Models.observer.Observer import Observer
-
+from Models.command.ListarContatosCommand import ListarContatosCommand
 
 class AgendaController:  # Herda de Subject
     def __init__(self, nome_agenda="Pessoal"):
