@@ -3,7 +3,6 @@ import os
 from Models.VO.ContatoVO import ContatoVO
 from Models.VO.AgendaVO import AgendaVO
 
-
 class AgendaDAO:
     """Responsável por salvar e buscar Agendas e seus contatos no JSON."""
 
