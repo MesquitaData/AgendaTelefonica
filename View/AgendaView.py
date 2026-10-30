@@ -86,8 +86,7 @@ class AgendaConsoleView(Observer):
             print("\n⚠️ Erro: Nome e Telefone são obrigatórios.")
 
     def _listar(self):
-        resultado = self.controller.buscar_contatos()
-        contatos = resultado.buscar() if hasattr(resultado, "buscar") else resultado
+        contatos = self.controller.listar_contatos()
 
         if not contatos:
             print(f"\n📭 A agenda '{self.nome_agenda}' está vazia.")

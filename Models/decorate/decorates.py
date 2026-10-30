@@ -18,7 +18,7 @@ class BuscarTodosContatos(BuscarComponent):
         return self.contatos
 
 
-# Decorator base
+# Decorator baser
 class FiltroDecorator(BuscarComponent):
     def __init__(self, component: BuscarComponent):
         self.componente = component
