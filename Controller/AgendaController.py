@@ -24,11 +24,12 @@ class AgendaController:  # Herda de Subject
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     # def listar_contatos(self):
-    #    return self.agenda_facade.listar_contatos()
+    #     return self.agenda_facade.listar_contatos()
 
     def listar_contatos(self):
         comando = ListarContatosCommand(self.agenda_facade)
         return comando.executar()
 
-    def buscar_contatos(self, termo):
-        return self.agenda_facade.buscar_contatos(termo)
+    def buscar_contatos(self, nome=None, telefone=None, email=None):
+        return self.agenda_facade.buscar_contatos(nome, telefone, email)
+

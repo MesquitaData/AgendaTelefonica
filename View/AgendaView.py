@@ -87,6 +87,7 @@ class AgendaConsoleView(Observer):
 
     def _listar(self):
         contatos = self.controller.listar_contatos()
+
         if not contatos:
             print(f"\n📭 A agenda '{self.nome_agenda}' está vazia.")
             return
@@ -96,16 +97,21 @@ class AgendaConsoleView(Observer):
             print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
 
     def _buscar(self):
-        termo = input("Digite o nome ou telefone para buscar: ").strip()
-        resultados = self.controller.buscar_contatos(termo)
+        print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
+        nome = input("Filtrar por Nome: ").strip() or None
+        telefone = input("Filtrar por Telefone: ").strip() or None
+        email = input("Filtrar por E-mail: ").strip() or None
+
+        resultado = self.controller.buscar_contatos(nome=nome, telefone=telefone, email=email)
+        resultados = resultado.buscar() if hasattr(resultado, "buscar") else resultado
 
         if not resultados:
-            print(f"\n❌ Nenhum contato encontrado para '{termo}'.")
+            print("\n❌ Nenhum contato encontrado com os critérios informados.")
             return
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - {c.telefone}")
+            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
 
     def _excluir(self):
         try:
