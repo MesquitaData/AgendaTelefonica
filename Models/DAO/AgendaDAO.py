@@ -6,8 +6,18 @@ from Models.VO.AgendaVO import AgendaVO
 class AgendaDAO:
     """Responsável por salvar e buscar Agendas e seus contatos no JSON."""
 
+    # Implementação do Singleton. Cada instância criada compartilha o mesmo caminho.
+    # Garante que a classe AgendaDAO tenha apenas uma instância com ponto de acesso global a ela.
+    _instancia = None
+    def __new__(cls, *args, **kwargs):
+        if cls._instancia is None:
+            cls._instancia = super().__new__(cls)
+        return cls._instancia
+
     def __init__(self, arquivo_dados="agendas_sistema.json"):
-        self.arquivo_dados = arquivo_dados
+        if not hasattr(self, "_inicializado"):
+            self.arquivo_dados = arquivo_dados
+            self._inicializado = True
 
     def _ler_arquivo(self):
         if not os.path.exists(self.arquivo_dados):
