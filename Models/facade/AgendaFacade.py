@@ -68,35 +68,16 @@ class AgendaFacade(Subject):
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
         return self.agenda_bo.listar_contatos()
-    #
-    # def buscar_contatos(self, termo):
-    #     termo = termo.lower()
-    #     return self.agenda_bo.buscar_contatos(termo)
 
-    def buscar_contatos(self, nome = None, telefone = None, email = None):
+    def buscar_contatos(self, nome=None, telefone=None, email=None):
+        busca = BuscarTodosContatos(self.agenda_bo)
+        if nome:
+            busca = FiltrarPorNome(busca, nome)
 
-        todos_os_contatos = BuscarTodosContatos(self.agenda_bo)
+        if telefone:
+            busca = FiltrarPorTelefone(busca, telefone)
 
-        if nome is not None:
-            # if telefone is not None:
-            #     if email is not None:
-            #         return FiltrarPorEmail(FiltrarPorTelefone(Filt3rarPorNome(todos_os_contatos, nome), telefone), email)
-            #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return FiltrarPorNome(todos_os_contatos, nome)
+        if email:
+            busca = FiltrarPorEmail(busca, email)
 
-        if telefone is not None:
-            # if nome is not None:
-            #     if email is not None:
-            #         return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-            #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return FiltrarPorTelefone(todos_os_contatos, telefone)
-
-        if email is not None:
-            # if telefone is not None:
-            #     if nome is not None:
-            #         return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-            #     return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
-            return FiltrarPorEmail(todos_os_contatos, email)
-
-        # return todos_os_contatos
-
+        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados

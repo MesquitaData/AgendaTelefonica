@@ -42,12 +42,11 @@ class AgendaBo:
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-
-    # def buscar_contatos(self, termo):
-    #     return [
-    #         c for c in self._agenda_ativa.contatos
-    #         if termo in c.nome.lower() or termo in c.telefone
-    #     ]
+    def buscar_contatos(self, termo):
+         return [
+             c for c in self._agenda_ativa.contatos
+             if termo in c.nome.lower() or termo in c.telefone
+         ]
 
     # PROJETO TRANSFORMANDO EM DECORATOR
     def listar_contatos(self):

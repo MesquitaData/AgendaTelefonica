@@ -27,5 +27,16 @@
                 "email": ""
             }
         ]
+    },
+    "Trabalho": {
+        "nome": "Trabalho",
+        "contatos": [
+            {
+                "id": 1,
+                "nome": "David ben Gabriel",
+                "telefone": "(87) 99999-9999",
+                "email": ""
+            }
+        ]
     }
 }

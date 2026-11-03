@@ -28,7 +28,7 @@ class AgendaConsoleView(Observer):
             print("2. Listar Contatos")
             print("3. Buscar Contato")
             print("4. Excluir Contato")
-            print("5. ALTERAR AGENDA (Pessoal/Trabalho/etc)")
+            print("5. ALTERAR AGENDA (Pessoal ou Trabalho)")
             print("6. Importar contatos de arquivo TXT")
             print("7. Sair")
 
@@ -58,7 +58,7 @@ class AgendaConsoleView(Observer):
             .strip()
             .capitalize()
         )
-        if nova_agenda:
+        if nova_agenda in ["Pessoal", "Trabalho"]:
             self.nome_agenda = nova_agenda
             # O Controller simplesmente carrega o novo estado a partir do DAO
             self.controller = AgendaController(self.nome_agenda)
@@ -98,12 +98,15 @@ class AgendaConsoleView(Observer):
 
     def _buscar(self):
         print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
+
         nome = input("Filtrar por Nome: ").strip() or None
         telefone = input("Filtrar por Telefone: ").strip() or None
         email = input("Filtrar por E-mail: ").strip() or None
-
-        resultado = self.controller.buscar_contatos(nome=nome, telefone=telefone, email=email)
-        resultados = resultado.buscar() if hasattr(resultado, "buscar") else resultado
+        resultados = self.controller.buscar_contatos(
+            nome=nome,
+            telefone=telefone,
+            email=email
+        )
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -111,7 +114,7 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | ✉️ {c.email}")
 
     def _excluir(self):
         try:
