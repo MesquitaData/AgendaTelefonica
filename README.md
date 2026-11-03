@@ -75,7 +75,7 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   9. Chain of responsibility [X]
   10. memento
   11. command [X]
-  12. singleton 
+  12. singleton [X]
   13. template method
   14. BO (business object) [X]
   15. decorate [X]
