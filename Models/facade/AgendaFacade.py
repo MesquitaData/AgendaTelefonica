@@ -62,7 +62,7 @@ class AgendaFacade(Subject):
 
         if self.agenda_bo:
             # Os observadores podem executar ações específicas quando recebem essa notificação.
-            self.notificar("contato_excluido", id_contato)
+            self.notificar("contato_excluido", id_contato) # Implementação padrão observer
             return True
 
         return False

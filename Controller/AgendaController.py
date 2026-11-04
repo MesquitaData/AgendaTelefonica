@@ -1,6 +1,8 @@
 from Models.facade.AgendaFacade import AgendaFacade
 from Models.observer.Observer import Observer
+from Models.command.Invocador import Invocador
 from Models.command.ListarContatosCommand import ListarContatosCommand
+from Models.command.ExcluirContatoCommand import ExcluirContatoCommand
 
 class AgendaController:  # Herda de Subject
     def __init__(self, nome_agenda="Pessoal"):
@@ -19,12 +21,18 @@ class AgendaController:  # Herda de Subject
     def adicionar_contato(self, nome, telefone, email=""):
         return self.agenda_facade.adicionar_contato(nome, telefone, email)
 
+    # Implementando o padrão command para encapsular as funcionalidades de excluir e listar contatos
     def excluir_contato(self, id_contato):
-        return self.agenda_facade.excluir_contato(id_contato)
+        invocador = Invocador()
+        comando = ExcluirContatoCommand(self.agenda_facade,id_contato)
+        invocador.definir_comando(comando)
+        return invocador.executar_comando()
 
     def listar_contatos(self):
+        invocador = Invocador()
         comando = ListarContatosCommand(self.agenda_facade)
-        return comando.executar()
+        invocador.definir_comando(comando)
+        return invocador.executar_comando()
 
     def buscar_contatos(self, nome=None, telefone=None, email=None):
         return self.agenda_facade.buscar_contatos(nome, telefone, email)
