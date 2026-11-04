@@ -20,7 +20,7 @@ class AgendaBo:
             return False
         id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
         novo_contato = ContatoVO(id_contato, nome, telefone, email)
-        erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
+        erro = cadeia.validar(novo_contato) # Chamada da Chain of Responsability
         if erro:
             return erro
         # Ideia provisoria - talvez dê pra colocar no validador

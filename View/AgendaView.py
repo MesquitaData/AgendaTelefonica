@@ -79,9 +79,6 @@ class AgendaConsoleView(Observer):
         if isinstance(resultado, str):
             print(f"Erro: {resultado}")
 
-        elif resultado:
-            print("\n✅ Contato adicionado com sucesso!")
-
         else:
             print("\n⚠️ Erro: Nome e Telefone são obrigatórios.")
 
@@ -98,7 +95,6 @@ class AgendaConsoleView(Observer):
 
     def _buscar(self):
         print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
-
         nome = input("Filtrar por Nome: ").strip() or None
         telefone = input("Filtrar por Telefone: ").strip() or None
         email = input("Filtrar por E-mail: ").strip() or None

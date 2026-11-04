@@ -11,8 +11,10 @@ class AgendaFacade(Subject):
     def __init__(self, nome_agenda: str = "Pessoal"):
         super().__init__()
         self._nome_agenda = nome_agenda
-        self._agenda_bo = None
+        self._agenda_bo = None  # Lazy Loading
 
+    # Sua finalidade é controlar a criação do objeto AgendaBo, evitando instanciá-lo desnecessariamente.
+    # Isso significa que, depois da primeira criação, as próximas chamadas reutilizam o mesmo objeto.
     @property
     def agenda_bo(self):
         if self._agenda_bo is None:
@@ -41,7 +43,6 @@ class AgendaFacade(Subject):
             return False
 
     def adicionar_contato(self, nome, telefone, email):
-
         novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, email)
 
         # Se o Business Object retornar uma mensagem de erro,
@@ -52,14 +53,15 @@ class AgendaFacade(Subject):
         if not novo_contato:
             return False
 
+        # Os observadores podem executar ações específicas quando recebem essa notificação.
         self.notificar("contato_adicionado", novo_contato)
         return novo_contato
 
     def excluir_contato(self, id_contato):
-
-        self.agenda_bo.excluir_contato(id_contato)
+        self.agenda_bo.excluir_contato(id_contato) # Encaminha a solicitação para a camada de negócio.
 
         if self.agenda_bo:
+            # Os observadores podem executar ações específicas quando recebem essa notificação.
             self.notificar("contato_excluido", id_contato)
             return True
 
@@ -67,10 +69,10 @@ class AgendaFacade(Subject):
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
-        return self.agenda_bo.listar_contatos()
+        return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
     def buscar_contatos(self, nome=None, telefone=None, email=None):
-        busca = BuscarTodosContatos(self.agenda_bo)
+        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
         if nome:
             busca = FiltrarPorNome(busca, nome)
 
