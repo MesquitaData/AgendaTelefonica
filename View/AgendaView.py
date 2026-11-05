@@ -71,9 +71,10 @@ class AgendaConsoleView(Observer):
         nome = input("Nome: ").strip()
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
+        idade = int(input("E-mail (opcional): ").strip())
 
         resultado = self.controller.adicionar_contato(
-            nome, telefone, email
+            nome, telefone, idade, email
         )
 
         if isinstance(resultado, str):
@@ -98,11 +99,9 @@ class AgendaConsoleView(Observer):
 
     def _buscar(self):
         print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
-        nome = input("Filtrar por Nome: ").strip() or None
-        telefone = input("Filtrar por Telefone: ").strip() or None
-        email = input("Filtrar por E-mail: ").strip() or None
+        item = input("Filtrar por nome, email ou telefone: ").strip() or None
 
-        resultado = self.controller.buscar_contatos(nome=nome, telefone=telefone, email=email)
+        resultado = self.controller.buscar_contatos(item)
         resultados = resultado.buscar() if hasattr(resultado, "buscar") else resultado
 
         if not resultados:

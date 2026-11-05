@@ -1,4 +1,7 @@
 from random import Random
+
+import math
+
 from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
@@ -29,7 +32,7 @@ class AgendaFacade(Subject):
 
             # Adiciona cada contato utilizando as regras e a persistência já existentes no sistema.
             for contato in contatos:
-                resultado = self.adicionar_contato(contato.nome,contato.telefone,contato.email)
+                resultado = self.adicionar_contato(contato.nome,contato.telefone, contato.idade, contato.email)
 
                 # Se houver erro de validação ou inclusão, interrompe a importação.
                 if isinstance(resultado, str) or not resultado:
@@ -40,9 +43,9 @@ class AgendaFacade(Subject):
         except (OSError, ValueError, KeyError, TypeError):
             return False
 
-    def adicionar_contato(self, nome, telefone, email):
+    def adicionar_contato(self, nome, telefone, idade, email):
 
-        novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, email)
+        novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, idade, email)
 
         # Se o Business Object retornar uma mensagem de erro,
         # não notifica os observadores.
@@ -73,30 +76,33 @@ class AgendaFacade(Subject):
     #     termo = termo.lower()
     #     return self.agenda_bo.buscar_contatos(termo)
 
-    def buscar_contatos(self, nome = None, telefone = None, email = None):
+    def buscar_contatos(self, item):
 
         todos_os_contatos = BuscarTodosContatos(self.agenda_bo)
 
-        if nome is not None:
+        nome = FiltrarPorNome(todos_os_contatos, item).buscar()
+        email = FiltrarPorEmail(todos_os_contatos, item).buscar()
+        telefone = FiltrarPorTelefone(todos_os_contatos, item).buscar()
+
+        if len(nome):
             # if telefone is not None:
             #     if email is not None:
             #         return FiltrarPorEmail(FiltrarPorTelefone(Filt3rarPorNome(todos_os_contatos, nome), telefone), email)
             #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return FiltrarPorNome(todos_os_contatos, nome)
+            return nome
 
-        if telefone is not None:
+        if len(telefone):
             # if nome is not None:
             #     if email is not None:
             #         return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
             #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return FiltrarPorTelefone(todos_os_contatos, telefone)
-
-        if email is not None:
+            return telefone
+        if len(email):
             # if telefone is not None:
             #     if nome is not None:
             #         return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
             #     return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
-            return FiltrarPorEmail(todos_os_contatos, email)
-
+            return email
+        return None
         # return todos_os_contatos
 

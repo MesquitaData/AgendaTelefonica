@@ -16,8 +16,8 @@ class AgendaController:  # Herda de Subject
     def importar_contatos_txt(self, caminho_arquivo):
         return self.agenda_facade.importar_contatos_txt(caminho_arquivo)
 
-    def adicionar_contato(self, nome, telefone, email=""):
-        return self.agenda_facade.adicionar_contato(nome, telefone, email)
+    def adicionar_contato(self,  nome, telefone, idade, email):
+        return self.agenda_facade.adicionar_contato( nome, telefone, idade, email)
 
     def excluir_contato(self, id_contato):
         return self.agenda_facade.excluir_contato(id_contato)
@@ -30,6 +30,6 @@ class AgendaController:  # Herda de Subject
         comando = ListarContatosCommand(self.agenda_facade)
         return comando.executar()
 
-    def buscar_contatos(self, nome=None, telefone=None, email=None):
-        return self.agenda_facade.buscar_contatos(nome, telefone, email)
+    def buscar_contatos(self, item):
+        return self.agenda_facade.buscar_contatos(item)
 
