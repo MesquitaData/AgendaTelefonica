@@ -2,6 +2,9 @@ class Invocador:
     def __init__(self):
         self.comando = None
 
+    # Classe invocador do padrão command
+    # Responsável por receber um objeto de comando e solicitar a sua execução
+    # Por exemplo, o comando ListarContatos
     def definir_comando(self, comando):
         self.comando = comando
 

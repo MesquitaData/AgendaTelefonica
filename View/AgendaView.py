@@ -28,7 +28,7 @@ class AgendaConsoleView(Observer):
             print("2. Listar Contatos")
             print("3. Buscar Contato")
             print("4. Excluir Contato")
-            print("5. ALTERAR AGENDA (Pessoal/Trabalho/etc)")
+            print("5. ALTERAR AGENDA (Pessoal ou Trabalho)")
             print("6. Importar contatos de arquivo TXT")
             print("7. Sair")
 
@@ -58,7 +58,7 @@ class AgendaConsoleView(Observer):
             .strip()
             .capitalize()
         )
-        if nova_agenda:
+        if nova_agenda in ["Pessoal", "Trabalho"]:
             self.nome_agenda = nova_agenda
             # O Controller simplesmente carrega o novo estado a partir do DAO
             self.controller = AgendaController(self.nome_agenda)
@@ -79,9 +79,6 @@ class AgendaConsoleView(Observer):
 
         if isinstance(resultado, str):
             print(f"Erro: {resultado}")
-
-        elif resultado:
-            print("\n✅ Contato adicionado com sucesso!")
 
         else:
             print("\n⚠️ Erro: Nome e Telefone são obrigatórios.")
@@ -142,6 +139,7 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | ✉️ {c.email}")
             print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
 
     def _excluir(self):

@@ -1,7 +1,4 @@
 from random import Random
-
-import math
-
 from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
@@ -15,8 +12,10 @@ class AgendaFacade(Subject):
     def __init__(self, nome_agenda: str = "Pessoal"):
         super().__init__()
         self._nome_agenda = nome_agenda
-        self._agenda_bo = None
+        self._agenda_bo = None  # Lazy Loading
 
+    # Sua finalidade é controlar a criação do objeto AgendaBo, evitando instanciá-lo desnecessariamente.
+    # Isso significa que, depois da primeira criação, as próximas chamadas reutilizam o mesmo objeto.
     @property
     def agenda_bo(self):
         if self._agenda_bo is None:
@@ -45,7 +44,6 @@ class AgendaFacade(Subject):
             return False
 
     def adicionar_contato(self, nome, telefone, idade, email):
-
         novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, idade, email)
 
         # Se o Business Object retornar uma mensagem de erro,
@@ -56,27 +54,34 @@ class AgendaFacade(Subject):
         if not novo_contato:
             return False
 
+        # Os observadores podem executar ações específicas quando recebem essa notificação.
         self.notificar("contato_adicionado", novo_contato)
         return novo_contato
 
     def excluir_contato(self, id_contato):
-
-        self.agenda_bo.excluir_contato(id_contato)
+        self.agenda_bo.excluir_contato(id_contato) # Encaminha a solicitação para a camada de negócio.
 
         if self.agenda_bo:
-            self.notificar("contato_excluido", id_contato)
+            # Os observadores podem executar ações específicas quando recebem essa notificação.
+            self.notificar("contato_excluido", id_contato) # Implementação padrão observer
             return True
 
         return False
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
-        return self.agenda_bo.listar_contatos()
-    #
-    # def buscar_contatos(self, termo):
-    #     termo = termo.lower()
-    #     return self.agenda_bo.buscar_contatos(termo)
+        return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
+    def buscar_contatos(self, nome=None, telefone=None, email=None):
+        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
+        if nome:
+            busca = FiltrarPorNome(busca, nome)
+
+        if telefone:
+            busca = FiltrarPorTelefone(busca, telefone)
+
+        if email:
+            busca = FiltrarPorEmail(busca, email)
     def buscar_contatos(self, nomeemailtelefone=None, idade=0):
 
         todos_os_contatos = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
@@ -109,3 +114,5 @@ class AgendaFacade(Subject):
             return []
         return [] if idade == 0 else todos_os_contatos.buscar()
         # return todos_os_contatos
+
+        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados

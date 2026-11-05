@@ -19,6 +19,8 @@ class AgendaBo:
         if not nome or not telefone:
             return False
         id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
+        novo_contato = ContatoVO(id_contato, nome, telefone, email)
+        erro = cadeia.validar(novo_contato) # Chamada da Chain of Responsability
         novo_contato = ContatoVO(id_contato, nome, telefone, idade, email)
         erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
         if erro:
@@ -43,12 +45,11 @@ class AgendaBo:
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-
-    # def buscar_contatos(self, termo):
-    #     return [
-    #         c for c in self._agenda_ativa.contatos
-    #         if termo in c.nome.lower() or termo in c.telefone
-    #     ]
+    def buscar_contatos(self, termo):
+         return [
+             c for c in self._agenda_ativa.contatos
+             if termo in c.nome.lower() or termo in c.telefone
+         ]
 
     # PROJETO TRANSFORMANDO EM DECORATOR
     def listar_contatos(self):
