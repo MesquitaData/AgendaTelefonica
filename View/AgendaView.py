@@ -71,9 +71,10 @@ class AgendaConsoleView(Observer):
         nome = input("Nome: ").strip()
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
+        idade = int(input("Idade: ").strip())
 
         resultado = self.controller.adicionar_contato(
-            nome, telefone, email
+            nome, telefone, idade, email
         )
 
         if isinstance(resultado, str):
@@ -91,18 +92,46 @@ class AgendaConsoleView(Observer):
 
         print(f"\n=== CONTATOS DA AGENDA: {self.nome_agenda.upper()} ===")
         for c in contatos:
-            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
+            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
 
     def _buscar(self):
-        print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
-        nome = input("Filtrar por Nome: ").strip() or None
-        telefone = input("Filtrar por Telefone: ").strip() or None
-        email = input("Filtrar por E-mail: ").strip() or None
-        resultados = self.controller.buscar_contatos(
-            nome=nome,
-            telefone=telefone,
-            email=email
-        )
+        print("\n🔍 === COMO DESEJA BUSCAR? ===")
+        print("1. Buscar só por Nome, E-mail ou Telefone")
+        print("2. Buscar só por Idade")
+        print("3. Buscar por Nome, E-mail ou Telefone E filtrar por Idade")
+
+        opcao = input("\nEscolha uma opção (1-3): ").strip()
+
+        item = None
+        idade = 0
+
+        if opcao == "1":
+            item = input("Digite o nome, e-mail ou telefone: ").strip()
+            if not item:
+                print("⚠️ Campo de busca não pode ser vazio.")
+                return
+
+        elif opcao == "2":
+            try:
+                idade = int(input("Digite a idade: ").strip())
+            except ValueError:
+                print("⚠️ Digite um número inteiro válido para a idade.")
+                return
+
+        elif opcao == "3":
+            item = input("Digite o nome, e-mail ou telefone: ").strip()
+            try:
+                idade = int(input("Digite a idade para filtrar: ").strip())
+            except ValueError:
+                print("⚠️ Digite um número inteiro válido para a idade.")
+                return
+
+        else:
+            print("\n⚠️ Opção de busca inválida!")
+            return
+
+        resultado = self.controller.buscar_contatos(item=item, idade=idade)
+        resultados = resultado.buscar() if hasattr(resultado, "buscar") else resultado
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -110,7 +139,7 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | ✉️ {c.email}")
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
 
     def _excluir(self):
         try:

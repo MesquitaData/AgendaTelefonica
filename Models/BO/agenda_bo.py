@@ -14,18 +14,21 @@ class AgendaBo:
             self._dao = AgendaDAO()
         return self._dao
 
-    def adicionar_contato(self, nome, telefone, email):
+    def adicionar_contato(self, nome, telefone, idade: int, email):
         cadeia = criar_cadeia()
         if not nome or not telefone:
             return False
         id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
         novo_contato = ContatoVO(id_contato, nome, telefone, email)
         erro = cadeia.validar(novo_contato) # Chamada da Chain of Responsability
+        novo_contato = ContatoVO(id_contato, nome, telefone, idade, email)
+        erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
         if erro:
             return erro
         # Ideia provisoria - talvez dê pra colocar no validador
-        is_empty = lambda contatos:len(contatos) == 0
-        if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
+        if len([c for c in self._agenda_ativa.contatos if nome in c.nome.lower() or telefone in c.telefone]) != 0:
+        # is_empty = lambda contatos:len(contatos) == 0
+        # if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
             return "Este contanto já exite nesta agenda !"
         self._agenda_ativa.contatos.append(novo_contato)
         self.dao.salvar_agenda(self._agenda_ativa)

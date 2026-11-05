@@ -6,24 +6,28 @@
                 "id": 1,
                 "nome": "Maria Silva",
                 "telefone": "(87) 99999-1111",
+                "idade": 25,
                 "email": "maria@email.com"
             },
             {
                 "id": 2,
                 "nome": "João Santos",
                 "telefone": "(87) 98888-2222",
+                "idade": 25,
                 "email": "joao@email.com"
             },
             {
                 "id": 3,
                 "nome": "Pedro Souza",
                 "telefone": "(87) 97777-3333",
+                "idade": 28,
                 "email": "pedro@email.com"
             },
             {
                 "id": 5,
                 "nome": "Lucas",
                 "telefone": "87999999999",
+                "idade": 28,
                 "email": "ls@gmail.com"
             }
         ]
@@ -35,6 +39,7 @@
                 "id": 1,
                 "nome": "David ben Gabriel",
                 "telefone": "(87) 99999-9999",
+                "idade": 30,
                 "email": ""
             }
         ]

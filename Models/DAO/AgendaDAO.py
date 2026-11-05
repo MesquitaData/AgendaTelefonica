@@ -46,7 +46,7 @@ class AgendaDAO:
         lista_contatos = []
 
         for c in dados_agenda["contatos"]:
-            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
+            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["idade"], c["email"]))
 
         return AgendaVO(nome_agenda, lista_contatos)
 
@@ -55,7 +55,13 @@ class AgendaDAO:
         todas_agendas = self._ler_arquivo()
 
         contatos_dict = [
-            {"id": c.id, "nome": c.nome, "telefone": c.telefone, "email": c.email}
+            {
+                "id": c.id,
+                "nome": c.nome,
+                "telefone": c.telefone,
+                "idade": c.idade,
+                "email": c.email
+            }
             for c in agenda_vo.contatos
         ]
 

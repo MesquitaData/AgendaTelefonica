@@ -3,7 +3,8 @@ from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail, \
+    FiltrarPorIdade
 from Models.observer.Observer import Subject
 from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
@@ -31,7 +32,7 @@ class AgendaFacade(Subject):
 
             # Adiciona cada contato utilizando as regras e a persistência já existentes no sistema.
             for contato in contatos:
-                resultado = self.adicionar_contato(contato.nome,contato.telefone,contato.email)
+                resultado = self.adicionar_contato(contato.nome,contato.telefone, contato.idade, contato.email)
 
                 # Se houver erro de validação ou inclusão, interrompe a importação.
                 if isinstance(resultado, str) or not resultado:
@@ -42,8 +43,8 @@ class AgendaFacade(Subject):
         except (OSError, ValueError, KeyError, TypeError):
             return False
 
-    def adicionar_contato(self, nome, telefone, email):
-        novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, email)
+    def adicionar_contato(self, nome, telefone, idade, email):
+        novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, idade, email)
 
         # Se o Business Object retornar uma mensagem de erro,
         # não notifica os observadores.
@@ -71,15 +72,20 @@ class AgendaFacade(Subject):
     def listar_contatos(self):
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, nome=None, telefone=None, email=None):
-        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
-        if nome:
-            busca = FiltrarPorNome(busca, nome)
+    def buscar_contatos(self, nomeemailtelefone=None, idade=0):
+        busca = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
+            if idade != 0 else BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
 
-        if telefone:
-            busca = FiltrarPorTelefone(busca, telefone)
+        if nomeemailtelefone:
+            nome = FiltrarPorNome(busca, nomeemailtelefone).buscar()
+            email = FiltrarPorEmail(busca, nomeemailtelefone).buscar()
+            telefone = FiltrarPorTelefone(busca, nomeemailtelefone).buscar()
 
-        if email:
-            busca = FiltrarPorEmail(busca, email)
+            if len(nome): return nome
 
-        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
+            if len(telefone): return telefone
+
+            if len(email):return email
+
+            return []
+        return [] if idade == 0 else busca.buscar()
