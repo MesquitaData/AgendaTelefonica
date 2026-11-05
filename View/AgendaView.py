@@ -139,8 +139,7 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | ✉️ {c.email}")
-            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
 
     def _excluir(self):
         try:

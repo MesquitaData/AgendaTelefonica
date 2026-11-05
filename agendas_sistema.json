@@ -27,6 +27,7 @@
                 "id": 5,
                 "nome": "Lucas",
                 "telefone": "87999999999",
+                "idade": 28,
                 "email": "ls@gmail.com"
             }
         ]
@@ -38,6 +39,7 @@
                 "id": 1,
                 "nome": "David ben Gabriel",
                 "telefone": "(87) 99999-9999",
+                "idade": 30,
                 "email": ""
             }
         ]

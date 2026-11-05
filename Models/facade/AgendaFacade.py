@@ -72,47 +72,20 @@ class AgendaFacade(Subject):
     def listar_contatos(self):
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, nome=None, telefone=None, email=None):
-        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
-        if nome:
-            busca = FiltrarPorNome(busca, nome)
-
-        if telefone:
-            busca = FiltrarPorTelefone(busca, telefone)
-
-        if email:
-            busca = FiltrarPorEmail(busca, email)
     def buscar_contatos(self, nomeemailtelefone=None, idade=0):
-
-        todos_os_contatos = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
-            if idade != 0 else BuscarTodosContatos(self.agenda_bo)
+        busca = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
+            if idade != 0 else BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
 
         if nomeemailtelefone:
-            nome = FiltrarPorNome(todos_os_contatos, nomeemailtelefone).buscar()
-            email = FiltrarPorEmail(todos_os_contatos, nomeemailtelefone).buscar()
-            telefone = FiltrarPorTelefone(todos_os_contatos, nomeemailtelefone).buscar()
+            nome = FiltrarPorNome(busca, nomeemailtelefone).buscar()
+            email = FiltrarPorEmail(busca, nomeemailtelefone).buscar()
+            telefone = FiltrarPorTelefone(busca, nomeemailtelefone).buscar()
 
-            if len(nome):
-                # if telefone is not None:
-                #     if email is not None:
-                #         return FiltrarPorEmail(FiltrarPorTelefone(Filt3rarPorNome(todos_os_contatos, nome), telefone), email)
-                #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-                return nome
+            if len(nome): return nome
 
-            if len(telefone):
-                # if nome is not None:
-                #     if email is not None:
-                #         return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-                #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-                return telefone
-            if len(email):
-                # if telefone is not None:
-                #     if nome is not None:
-                #         return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-                #     return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
-                return email
+            if len(telefone): return telefone
+
+            if len(email):return email
+
             return []
-        return [] if idade == 0 else todos_os_contatos.buscar()
-        # return todos_os_contatos
-
-        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
+        return [] if idade == 0 else busca.buscar()
