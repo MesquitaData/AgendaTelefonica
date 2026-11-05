@@ -6,7 +6,8 @@ from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail, \
+    FiltrarPorIdade
 from Models.observer.Observer import Subject
 from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
@@ -76,33 +77,35 @@ class AgendaFacade(Subject):
     #     termo = termo.lower()
     #     return self.agenda_bo.buscar_contatos(termo)
 
-    def buscar_contatos(self, item):
+    def buscar_contatos(self, nomeemailtelefone=None, idade=0):
 
-        todos_os_contatos = BuscarTodosContatos(self.agenda_bo)
+        todos_os_contatos = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
+            if idade != 0 else BuscarTodosContatos(self.agenda_bo)
 
-        nome = FiltrarPorNome(todos_os_contatos, item).buscar()
-        email = FiltrarPorEmail(todos_os_contatos, item).buscar()
-        telefone = FiltrarPorTelefone(todos_os_contatos, item).buscar()
+        if nomeemailtelefone:
+            nome = FiltrarPorNome(todos_os_contatos, nomeemailtelefone).buscar()
+            email = FiltrarPorEmail(todos_os_contatos, nomeemailtelefone).buscar()
+            telefone = FiltrarPorTelefone(todos_os_contatos, nomeemailtelefone).buscar()
 
-        if len(nome):
-            # if telefone is not None:
-            #     if email is not None:
-            #         return FiltrarPorEmail(FiltrarPorTelefone(Filt3rarPorNome(todos_os_contatos, nome), telefone), email)
-            #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return nome
+            if len(nome):
+                # if telefone is not None:
+                #     if email is not None:
+                #         return FiltrarPorEmail(FiltrarPorTelefone(Filt3rarPorNome(todos_os_contatos, nome), telefone), email)
+                #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
+                return nome
 
-        if len(telefone):
-            # if nome is not None:
-            #     if email is not None:
-            #         return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-            #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
-            return telefone
-        if len(email):
-            # if telefone is not None:
-            #     if nome is not None:
-            #         return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
-            #     return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
-            return email
-        return None
+            if len(telefone):
+                # if nome is not None:
+                #     if email is not None:
+                #         return FiltrarPorEmail(FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
+                #     return FiltrarPorNome(FiltrarPorTelefone(todos_os_contatos, telefone), nome)
+                return telefone
+            if len(email):
+                # if telefone is not None:
+                #     if nome is not None:
+                #         return FiltrarPorNome(FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, telefone), nome), email)
+                #     return FiltrarPorTelefone(FiltrarPorTelefone(todos_os_contatos, email), telefone)
+                return email
+            return []
+        return [] if idade == 0 else todos_os_contatos.buscar()
         # return todos_os_contatos
-

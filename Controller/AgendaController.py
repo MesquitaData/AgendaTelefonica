@@ -30,6 +30,6 @@ class AgendaController:  # Herda de Subject
         comando = ListarContatosCommand(self.agenda_facade)
         return comando.executar()
 
-    def buscar_contatos(self, item):
-        return self.agenda_facade.buscar_contatos(item)
+    def buscar_contatos(self, item=None, idade=0):
+        return self.agenda_facade.buscar_contatos(item, idade)
 
