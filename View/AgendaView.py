@@ -95,7 +95,7 @@ class AgendaConsoleView(Observer):
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
         idade = int(input("Idade: ").strip())
-        contato = ContatoVO(0,nome,telefone,email)
+        contato = ContatoVO(0,nome,telefone, idade, email)
         return self.agenda_facade.adicionar_contato(contato)
 
     def _listar(self):
@@ -119,8 +119,8 @@ class AgendaConsoleView(Observer):
 
         opcao = input("\nEscolha uma opção (1-3): ").strip()
 
-        item = None
-        idade = 0
+        item: str = ""
+        idade: int = 0
 
         if opcao == "1":
             item = input("Digite o nome, e-mail ou telefone: ").strip()
@@ -147,8 +147,7 @@ class AgendaConsoleView(Observer):
             print("\n⚠️ Opção de busca inválida!")
             return
 
-        resultado = self.controller.buscar_contatos(item=item, idade=idade)
-        resultados = resultado.buscar() if hasattr(resultado, "buscar") else resultado
+        resultados = self.agenda_facade.buscar_contatos(item, idade)
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")

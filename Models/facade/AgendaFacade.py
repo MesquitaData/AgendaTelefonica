@@ -45,7 +45,7 @@ class AgendaFacade(Subject):
         self.notificar("contatos_listados",self._nome_agenda)
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, nomeemailtelefone=None, idade=0):
+    def buscar_contatos(self, nomeemailtelefone:str="", idade=0):
         busca = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
             if idade != 0 else BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
 
@@ -62,7 +62,6 @@ class AgendaFacade(Subject):
 
             return []
         return [] if idade == 0 else busca.buscar()
-        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
 
     def alternar_agenda(self, nome_agenda):
         self.notificar("alternar_agenda")

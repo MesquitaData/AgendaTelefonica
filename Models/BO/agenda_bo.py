@@ -30,7 +30,7 @@ class AgendaBo:
         if erro:
             return "Dados inválidos ou contato já existente!"
         # Ideia provisoria - talvez dê pra colocar no validador
-        if len([c for c in self._agenda_ativa.contatos if nome in c.nome.lower() or telefone in c.telefone]) != 0:
+        if len([c for c in self._agenda_ativa.contatos if contatoVO.nome in c.nome.lower() or contatoVO.telefone in c.telefone]) != 0:
         # is_empty = lambda contatos:len(contatos) == 0
         # if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
             return "Este contanto já exite nesta agenda !"
