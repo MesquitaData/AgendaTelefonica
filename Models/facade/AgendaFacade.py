@@ -1,12 +1,7 @@
-from random import Random
-from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
-from Models.DAO.AgendaDAO import AgendaDAO
-from Models.VO.ContatoVO import ContatoVO
 from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail, \
     FiltrarPorIdade
-from Models.observer.Observer import Subject, Observer
-from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
+from Controller.observer.Observer import Subject
 
 class AgendaFacade(Subject):
     def __init__(self, nome_agenda: str = "Pessoal"):
@@ -20,8 +15,8 @@ class AgendaFacade(Subject):
 
     def adicionar_contato(self,contatoVO):
         retorno = self.agenda_bo.adicionar_contato(contatoVO)
-        # Se o Business Object retornar uma mensagem de erro,
-        # não notifica os observadores.
+        # Se o Business Object retornar uma mensagem de erro, notifica aos observadores(controller)
+        # que esse contato telefônico já existe na agenda!!!
         if isinstance(retorno, str):
             self.notificar("contato_existente",contatoVO)
             return

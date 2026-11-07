@@ -1,15 +1,12 @@
 from Models.facade.AgendaFacade import AgendaFacade
-from Models.observer.Observer import Observer
+from Controller.observer.Observer import Observer
 from Models.command.Invocador import *
 from Models.command.ListarContatosCommand import *
 from Models.command.ExcluirContatoCommand import *
 from Models.VO.ContatoVO import ContatoVO
-from Models.VO.AgendaVO import AgendaVO
-from pathlib import Path
 
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
-
     def __init__(self):
         # O programa inicia na agenda Pessoal por padrão
         super().__init__()

@@ -10,7 +10,7 @@ class ValidarNumero(Validador.Validador):
 
         digitos = re.sub(r"\D", "", telefone)
 
-        if len(digitos) not in (10, 11):
-            return "O telefone deve ter 10 ou 11 dígitos."
+        if len(digitos) is not 11:
+            return "O telefone deve ter 11 dígitos."
 
         return None
