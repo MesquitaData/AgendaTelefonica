@@ -1,7 +1,9 @@
 import json
 import os
+from pathlib import Path
 from Models.VO.ContatoVO import ContatoVO
 from Models.VO.AgendaVO import AgendaVO
+from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
 class AgendaDAO:
     """Responsável por salvar e buscar Agendas e seus contatos no JSON."""
@@ -17,6 +19,7 @@ class AgendaDAO:
         return cls._instancia # Retorna a instância DAO. Em outras chamadas, é retornada a mesma instância.
 
     # Aqui se o atributo inicializado for True, não sobreescreve o caminho até o arquivo com os dados
+    # Ou seja, para outros objetos DAO o arquivo_dados será o mesmo
     def __init__(self, arquivo_dados="agendas_sistema.json"): # Inicializa o objeto criado
         if not hasattr(self, "_inicializado"): # Verifica se o objeto já criado possui um determinado atributo
             self.arquivo_dados = arquivo_dados
@@ -71,3 +74,15 @@ class AgendaDAO:
         }
 
         self._gravar_arquivo(todas_agendas)
+
+    # Aqui, futuramente, poderia ter outros caminhos para outros
+    # tipos de arquivos ou BD
+    def importar_contatos_dao(self):
+        caminho_arquivo = Path(__file__).resolve().parents[2] / "contatos.txt"
+
+        try:
+            adapter = TXTContatoAdapter()
+            return adapter.adaptar(caminho_arquivo)
+
+        except (OSError, ValueError, KeyError, TypeError) as erro:
+            return []

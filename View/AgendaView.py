@@ -1,5 +1,10 @@
-from Controller.AgendaController import AgendaController
+from Models.facade.AgendaFacade import AgendaFacade
 from Models.observer.Observer import Observer
+from Models.command.Invocador import *
+from Models.command.ListarContatosCommand import *
+from Models.command.ExcluirContatoCommand import *
+from Models.VO.ContatoVO import ContatoVO
+from Models.VO.AgendaVO import AgendaVO
 from pathlib import Path
 
 class AgendaConsoleView(Observer):
@@ -7,17 +12,36 @@ class AgendaConsoleView(Observer):
 
     def __init__(self):
         # O programa inicia na agenda Pessoal por padrão
+        super().__init__()
         self.nome_agenda = "Pessoal"
-        self.controller = AgendaController(self.nome_agenda)
-        self.controller.inscrever_observador(self)
+        self.agenda_facade = AgendaFacade(nome_agenda=self.nome_agenda)
+        self.agenda_facade.inscrever(self)
+        self._invocador = None  # Lazy Loading, pois command só existe para listar e excluir
 
+    # Cria o atributo invocador
+    @property
+    def invocador(self):
+        if self._invocador is None: self._invocador = Invocador()
+        return self._invocador
+
+    # Implementação padrão Observer, que observará a Facade
     def atualizar(self, evento: str, dados=None):
         """Este método é chamado automaticamente pelo Controller sempre que algo muda."""
         print("\n📢 [NOTIFICAÇÃO DO SISTEMA]")
         if evento == "contato_adicionado":
             print(f"» Novo contato salvo em tempo real: {dados.nome} ({dados.telefone})")
         elif evento == "contato_excluido":
-            print(f"» O contato com ID {dados} foi removido com sucesso do banco JSON.")
+            print(f"» O contato com ID {dados} foi removido com sucesso da base de dados.")
+        elif evento == "alternar_agenda":
+            print(f"» A agenda foi alterada para {self.nome_agenda.upper()}.")
+        elif evento == "buscar_contato":
+            print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
+        elif evento == "listar_contatos":
+            print(f"» Retornando os contatos salvos na agenda {dados}")
+        elif evento == "importar_contatos":
+            print(f"» Retornando os contatos salvos na agenda")
+        elif evento == "contato_existente":
+            print(f"» Esse contato telefônico já foi cadastrado no sistema!")
 
     def iniciar(self):
         while True:
@@ -45,7 +69,7 @@ class AgendaConsoleView(Observer):
             elif opcao == "5":
                 self._alternar_agenda()  # <- Nova funcionalidade da View
             elif opcao == "6":
-                self.importar_contatos_txt()  # <- Funcionalidade Adapter
+                self.importar_contatos()  # <- Funcionalidade Adapter
             elif opcao == "7":
                 print("\n👋 Fechando o sistema... Até logo!")
                 break
@@ -59,11 +83,10 @@ class AgendaConsoleView(Observer):
             .capitalize()
         )
         if nova_agenda in ["Pessoal", "Trabalho"]:
-            self.nome_agenda = nova_agenda
-            # O Controller simplesmente carrega o novo estado a partir do DAO
-            self.controller = AgendaController(self.nome_agenda)
-            self.controller.inscrever_observador(self)
-            print(f"\n🔄 Você mudou para a agenda: '{self.nome_agenda}'")
+            if self.agenda_facade.alternar_agenda(nova_agenda):
+                self.nome_agenda = nova_agenda
+            else:
+                print("\n⚠️ Não foi possível acessar a agenda.")
         else:
             print("\n⚠️ Nome inválido.")
 
@@ -72,19 +95,13 @@ class AgendaConsoleView(Observer):
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
         idade = int(input("Idade: ").strip())
-
-        resultado = self.controller.adicionar_contato(
-            nome, telefone, idade, email
-        )
-
-        if isinstance(resultado, str):
-            print(f"Erro: {resultado}")
-
-        else:
-            print("\n⚠️ Erro: Nome e Telefone são obrigatórios.")
+        contato = ContatoVO(0,nome,telefone,email)
+        return self.agenda_facade.adicionar_contato(contato)
 
     def _listar(self):
-        contatos = self.controller.listar_contatos()
+        comando = ListarContatosCommand(self.agenda_facade)
+        self.invocador.definir_comando(comando)
+        contatos = self._invocador.executar_comando()
 
         if not contatos:
             print(f"\n📭 A agenda '{self.nome_agenda}' está vazia.")
@@ -144,22 +161,13 @@ class AgendaConsoleView(Observer):
     def _excluir(self):
         try:
             id_excluir = int(input("\nDigite o ID do contato para remover: "))
-            if self.controller.excluir_contato(id_excluir):
-                print("\n🗑️ Contato removido com sucesso!")
-            else:
-                print("\n❌ ID não encontrado nesta agenda.")
+            comando = ExcluirContatoCommand(self.agenda_facade, id_excluir)
+            self.invocador.definir_comando(comando)
+            self._invocador.executar_comando()
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
 
-    def importar_contatos_txt(self):
-        # caminho = input("Digite o caminho do arquivo TXT: ").strip().strip('"')
-        caminho = Path(__file__).resolve().parent.parent / "contatos.txt"
-        if not caminho:
-            print("Nenhum arquivo foi informado.")
-            return
-
-        resultado = self.controller.importar_contatos_txt(str(Path(caminho)))
-        if resultado:
-            print("Contatos importados e salvos com sucesso no JSON!")
-        else:
+    def importar_contatos(self):
+        resultado = self.agenda_facade.importar_contatos_facade()
+        if not resultado:
             print("Erro ao importar ou salvar os contatos no JSON.")

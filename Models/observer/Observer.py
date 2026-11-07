@@ -1,7 +1,9 @@
-class Observer:
+from abc import abstractmethod, ABC
+
+class Observer(ABC):
     """Interface que todo observador deve implementar."""
-    def atualizar(self, evento: str, dados=None):
-        pass
+    @abstractmethod
+    def atualizar(self, evento: str, dados=None): pass
 
 class Subject:
     """Classe base para quem deseja ser observado (gerencia as assinaturas)."""

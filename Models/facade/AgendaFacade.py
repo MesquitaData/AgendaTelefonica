@@ -5,58 +5,30 @@ from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
 from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail, \
     FiltrarPorIdade
-from Models.observer.Observer import Subject
+from Models.observer.Observer import Subject, Observer
 from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 
 class AgendaFacade(Subject):
     def __init__(self, nome_agenda: str = "Pessoal"):
         super().__init__()
         self._nome_agenda = nome_agenda
-        self._agenda_bo = None  # Lazy Loading
+        self.agenda_bo = AgendaBo(self._nome_agenda)
 
-    # Sua finalidade é controlar a criação do objeto AgendaBo, evitando instanciá-lo desnecessariamente.
-    # Isso significa que, depois da primeira criação, as próximas chamadas reutilizam o mesmo objeto.
-    @property
-    def agenda_bo(self):
-        if self._agenda_bo is None:
-            self._agenda_bo = AgendaBo(self._nome_agenda)
-        return self._agenda_bo
+    def importar_contatos_facade(self):
+        self.notificar("importar_contatos")
+        return self.agenda_bo.importar_contatos_bo()
 
-    def importar_contatos_txt(self, caminho_arquivo):
-        try:
-            adapter = TXTContatoAdapter()
-            contatos = adapter.adaptar(caminho_arquivo)
-
-            if not contatos:
-                return False
-
-            # Adiciona cada contato utilizando as regras e a persistência já existentes no sistema.
-            for contato in contatos:
-                resultado = self.adicionar_contato(contato.nome,contato.telefone, contato.idade, contato.email)
-
-                # Se houver erro de validação ou inclusão, interrompe a importação.
-                if isinstance(resultado, str) or not resultado:
-                    return False
-
-            return True
-
-        except (OSError, ValueError, KeyError, TypeError):
-            return False
-
-    def adicionar_contato(self, nome, telefone, idade, email):
-        novo_contato: ContatoVO = self.agenda_bo.adicionar_contato(nome, telefone, idade, email)
-
+    def adicionar_contato(self,contatoVO):
+        retorno = self.agenda_bo.adicionar_contato(contatoVO)
         # Se o Business Object retornar uma mensagem de erro,
         # não notifica os observadores.
-        if isinstance(novo_contato, str):
-            return novo_contato
-
-        if not novo_contato:
-            return False
+        if isinstance(retorno, str):
+            self.notificar("contato_existente",contatoVO)
+            return
 
         # Os observadores podem executar ações específicas quando recebem essa notificação.
-        self.notificar("contato_adicionado", novo_contato)
-        return novo_contato
+        self.notificar("contato_adicionado", contatoVO) # Aplicação padrão observer
+        return contatoVO
 
     def excluir_contato(self, id_contato):
         self.agenda_bo.excluir_contato(id_contato) # Encaminha a solicitação para a camada de negócio.
@@ -70,6 +42,7 @@ class AgendaFacade(Subject):
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
+        self.notificar("contatos_listados",self._nome_agenda)
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
     def buscar_contatos(self, nomeemailtelefone=None, idade=0):
@@ -89,3 +62,8 @@ class AgendaFacade(Subject):
 
             return []
         return [] if idade == 0 else busca.buscar()
+        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
+
+    def alternar_agenda(self, nome_agenda):
+        self.notificar("alternar_agenda")
+        return self.agenda_bo.alternar_agenda(nome_agenda)
