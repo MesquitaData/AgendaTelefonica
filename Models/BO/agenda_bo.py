@@ -19,8 +19,6 @@ class AgendaBo:
         if not nome or not telefone:
             return False
         id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
-        novo_contato = ContatoVO(id_contato, nome, telefone, email)
-        erro = cadeia.validar(novo_contato) # Chamada da Chain of Responsability
         novo_contato = ContatoVO(id_contato, nome, telefone, idade, email)
         erro = cadeia.validar(novo_contato) # Chama da Chain of Responsability
         if erro:
