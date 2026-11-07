@@ -47,7 +47,6 @@ class FiltrarPorEmail(FiltroDecorator):
         contatos = super().buscar()
         return [contato for contato in contatos if self.email == contato.email]
 
-
 class FiltrarPorTelefone(FiltroDecorator):
     def __init__(self, component: BuscarComponent, telefone: str):
         super().__init__(component)

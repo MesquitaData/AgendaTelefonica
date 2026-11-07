@@ -1,7 +1,10 @@
 import random
-from Controller.Validadores.CadeiaResp import criar_cadeia
 from Models.DAO.AgendaDAO import AgendaDAO
 from Models.VO.ContatoVO import ContatoVO
+from Validadores.ValidarNome import ValidarNome
+from Controller.Validadores.ValidarNumero import ValidarNumero
+from Controller.Validadores.ValidarEmail import ValidarEmail
+from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
 
 class AgendaBo:
     def __init__(self, nome_agenda):
@@ -14,40 +17,63 @@ class AgendaBo:
             self._dao = AgendaDAO()
         return self._dao
 
-    def adicionar_contato(self, nome, telefone, email):
-        cadeia = criar_cadeia()
-        if not nome or not telefone:
-            return False
-        id_contato = len(self._agenda_ativa.contatos) + 1  # Autoincremental
-        novo_contato = ContatoVO(id_contato, nome, telefone, email)
-        erro = cadeia.validar(novo_contato) # Chamada da Chain of Responsability
+    def adicionar_contato(self, contatoVO):
+        nome_validar = ValidarNome()
+        numero_validar = ValidarNumero()
+        email_validar = ValidarEmail()
+        duplicidade_validar = ValidarDuplicidade(self._agenda_ativa.contatos)
+
+        nome_validar.set_proximo(numero_validar).set_proximo(email_validar).set_proximo(duplicidade_validar)
+
+        # 2. Execução com interrupção imediata (Fail-Fast)
+        erro = nome_validar.validar(contatoVO)
         if erro:
-            return erro
-        # Ideia provisoria - talvez dê pra colocar no validador
-        is_empty = lambda contatos:len(contatos) == 0
-        if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
-            return "Este contanto já exite nesta agenda !"
-        self._agenda_ativa.contatos.append(novo_contato)
+            return "Dados inválidos ou contato já existente!"
+
+        # 3. Se passou por toda a cadeia com sucesso, persiste os dados
+        contatoVO.id = len(self._agenda_ativa.contatos) + 1
+        self._agenda_ativa.contatos.append(contatoVO)
         self.dao.salvar_agenda(self._agenda_ativa)
-        return novo_contato
+        return True
 
     def excluir_contato(self, id_contato):
         contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]
 
         if len(self._agenda_ativa.contatos) == len(contatos_filtrados):
             return False
-
         self._agenda_ativa.contatos = contatos_filtrados
+
+        # Reajusta os IDs dos contatos
+        for novo_id, contato in enumerate(self._agenda_ativa.contatos, start=1):
+            contato.id = novo_id
         self.dao.salvar_agenda(self._agenda_ativa)
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def buscar_contatos(self, termo):
-         return [
-             c for c in self._agenda_ativa.contatos
-             if termo in c.nome.lower() or termo in c.telefone
-         ]
+         return [c for c in self._agenda_ativa.contatos if termo in c.nome.lower() or termo in c.telefone]
 
     # PROJETO TRANSFORMANDO EM DECORATOR
     def listar_contatos(self):
         return self._agenda_ativa.contatos
+
+    def alternar_agenda(self, nome_agenda):
+        nova_agenda = self.dao.obter_agenda(nome_agenda)
+        if nova_agenda is None:
+            return False
+        self._agenda_ativa = nova_agenda
+        return True
+
+    def importar_contatos_bo(self):
+        contatos = self.dao.importar_contatos_dao()
+        if not contatos:
+            return False
+        for contato in contatos:
+
+            # Verifica se o telefone já existe na agenda ativa
+            telefone_existe = self.buscar_contatos(contato.telefone)
+            if telefone_existe: continue
+            resultado = self.adicionar_contato(contato)
+            if resultado is not True: return False
+
+        return True
