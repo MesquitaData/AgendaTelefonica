@@ -25,12 +25,13 @@ class AgendaBo:
 
         nome_validar.set_proximo(numero_validar).set_proximo(email_validar).set_proximo(duplicidade_validar)
 
-        # 2. Execução com interrupção imediata (Fail-Fast)
-        erro = nome_validar.validar(contatoVO)
+        erro = nome_validar.validar(contatoVO) # validação em cadeia a partir da validação de nome
         if erro:
             return "Dados inválidos ou contato já existente!"
 
-        # 3. Se passou por toda a cadeia com sucesso, persiste os dados
+        # Se passou por toda a cadeia com sucesso, persiste os dados
+        telefone = contatoVO.telefone
+        contatoVO.telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}" # Formatação do telefone
         contatoVO.id = len(self._agenda_ativa.contatos) + 1
         self._agenda_ativa.contatos.append(contatoVO)
         self.dao.salvar_agenda(self._agenda_ativa)
