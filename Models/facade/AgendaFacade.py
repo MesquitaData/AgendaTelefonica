@@ -9,8 +9,10 @@ class AgendaFacade(Subject):
         self.agenda_bo = AgendaBo(self._nome_agenda)
 
     def importar_contatos_facade(self):
-        self.notificar("importar_contatos")
-        return self.agenda_bo.importar_contatos_bo()
+        resultado = self.agenda_bo.importar_contatos_bo()
+        if resultado: self.notificar("importar_contatos")
+        else: self.notificar("importar_contatos_sem_sucesso")
+        return resultado
 
     def adicionar_contato(self,contatoVO):
         retorno = self.agenda_bo.adicionar_contato(contatoVO)
@@ -39,19 +41,10 @@ class AgendaFacade(Subject):
         self.notificar("contatos_listados",self._nome_agenda)
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, nome=None, telefone=None, email=None):
+    def buscar_contatos(self, contato):
         self.notificar("buscar_contatos",self._nome_agenda)
-        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
-
-        if nome:
-            busca = FiltrarPorNome(busca, nome)
-        if telefone:
-            busca = FiltrarPorTelefone(busca, telefone)
-        if email:
-            busca = FiltrarPorEmail(busca, email)
-
-        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
+        return self.agenda_bo.buscar_contatos(contato=contato) # Entregar à camada que a chamou a lista de contatos encontrados
 
     def alternar_agenda(self, nome_agenda):
-        self.notificar("alternar_agenda")
+        self.notificar("alternar_agenda",nome_agenda)
         return self.agenda_bo.alternar_agenda(nome_agenda)

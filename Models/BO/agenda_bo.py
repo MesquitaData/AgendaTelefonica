@@ -29,19 +29,15 @@ class AgendaBo:
         erro = nome_validar.validar(contatoVO) # validação em cadeia a partir da validação de nome
         if erro:
             return "Dados inválidos ou contato já existente!"
-        # Ideia provisoria - talvez dê pra colocar no validador
+
         if len([c for c in self._agenda_ativa.contatos if contatoVO.nome in c.nome.lower() or contatoVO.telefone in c.telefone]) != 0:
-        # is_empty = lambda contatos:len(contatos) == 0
-        # if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
             return "Este contanto já exite nesta agenda !"
 
         # Se passou por toda a cadeia com sucesso, persiste os dados
-        telefone = contatoVO.telefone
-        contatoVO.telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}" # Formatação do telefone
         contatoVO.id = len(self._agenda_ativa.contatos) + 1
         self._agenda_ativa.contatos.append(contatoVO)
         self.dao.salvar_agenda(self._agenda_ativa)
-        return True
+        return None
 
     def excluir_contato(self, id_contato):
         contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]
@@ -57,7 +53,7 @@ class AgendaBo:
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-    def buscar_contatos_decorator(self, contato):
+    def buscar_contatos(self, contato):
         busca = BuscarTodosContatos(self)  # Implementação do padrão decorator
 
         if contato.telefone:
@@ -80,20 +76,13 @@ class AgendaBo:
         self._agenda_ativa = nova_agenda
         return True
 
-    def busca_contato(self,parametro):
-        for contato in self._agenda_ativa.contatos:
-            if parametro == contato.telefone: return True
-        return False
-        # return [c for c in self._agenda_ativa.contatos if parametro is not c.telefone]
-
     def importar_contatos_bo(self):
         contatos = self.dao.importar_contatos_dao()
-        if not contatos:
-            return False
+        adicionado = 0
+        if not contatos: return False
         for contato in contatos:
-            # telefone_existe = self.busca_contato(contato.telefone) # Verifica se o telefone já existe na agenda ativa
-            if self.busca_contato(contato.telefone): continue
-            resultado = self.adicionar_contato(contato)
-            if resultado is not True: return False
-
-        return True
+            if not self.adicionar_contato(contato):
+                adicionado+=1
+                continue
+        if adicionado != 0: return True
+        return False

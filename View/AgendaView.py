@@ -26,11 +26,13 @@ class AgendaConsoleView(Observer):
         """Este método é chamado automaticamente pelo Controller sempre que algo muda."""
         print("\n📢 [NOTIFICAÇÃO DO SISTEMA]")
         if evento == "contato_adicionado":
-            print(f"» Novo contato salvo em tempo real: {dados.nome} ({dados.telefone})")
+            telefone = dados.telefone
+            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"
+            print(f"» Novo contato salvo em tempo real: Nome: {dados.nome} - Telefone: {telefone}")
         elif evento == "contato_excluido":
             print(f"» O contato com ID {dados} foi removido com sucesso da base de dados.")
         elif evento == "alternar_agenda":
-            print(f"» A agenda foi alterada para {self.nome_agenda.upper()}.")
+            print(f"» A agenda foi alterada para a Agenda {dados.upper()}.")
         elif evento == "buscar_contato":
             print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
         elif evento == "listar_contatos":
@@ -39,6 +41,8 @@ class AgendaConsoleView(Observer):
             print(f"» Retornando os contatos salvos na agenda")
         elif evento == "contato_existente":
             print(f"» Esse contato telefônico já foi cadastrado no sistema!")
+        elif evento == "importar_contatos_sem_sucesso":
+            print("Nenhum contato foi importado. Verifique se os contatos já existem na agenda.")
 
     def iniciar(self):
         while True:
@@ -105,14 +109,16 @@ class AgendaConsoleView(Observer):
 
         print(f"\n=== CONTATOS DA AGENDA: {self.nome_agenda.upper()} ===")
         for c in contatos:
-            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
+            telefone = c.telefone
+            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"  # Formatação do telefone
+            print(f"ID: {c.id} | {c.nome} - 📞 {telefone} | ✉️ {c.email}")
 
     def _buscar(self):
         print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
         nome = input("Filtrar por Nome: ").strip() or None
         telefone = input("Filtrar por Telefone: ").strip() or None
         email = input("Filtrar por E-mail: ").strip() or None
-        resultados = self.agenda_facade.buscar_contatos(nome, telefone, email) #Controller
+        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0,nome,telefone,email)) #Controller
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -120,7 +126,9 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | ✉️ {c.email}")
+            telefone = c.telefone
+            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"  # Formatação do telefone
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {telefone} | ✉️ {c.email}")
 
     def _excluir(self):
         try:
@@ -131,7 +139,4 @@ class AgendaConsoleView(Observer):
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
 
-    def importar_contatos(self):
-        resultado = self.agenda_facade.importar_contatos_facade()
-        if not resultado:
-            print("Erro ao importar ou salvar os contatos no JSON.")
+    def importar_contatos(self): self.agenda_facade.importar_contatos_facade()
