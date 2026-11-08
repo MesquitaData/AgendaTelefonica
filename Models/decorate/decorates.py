@@ -1,8 +1,6 @@
 # Componente Base
 from abc import ABC, abstractmethod
 
-from Models.BO.agenda_bo import AgendaBo
-
 # Abstract Base Class
 class BuscarComponent(ABC):
 
@@ -14,7 +12,7 @@ class BuscarComponent(ABC):
 # Busca todos os contatos sem aplicar nenhum fitro
 # Utiliza os metodos disponibilizados pela camada de negocio
 class BuscarTodosContatos(BuscarComponent):
-    def __init__(self, agenda_bo:AgendaBo):
+    def __init__(self, agenda_bo):
         self.contatos = agenda_bo.listar_contatos()  # Ocorre a recuperação dos contatos
 
     def buscar(self):

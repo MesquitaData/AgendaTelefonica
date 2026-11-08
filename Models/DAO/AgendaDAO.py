@@ -4,6 +4,18 @@ from pathlib import Path
 from Models.VO.ContatoVO import ContatoVO
 from Models.VO.AgendaVO import AgendaVO
 from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
+import threading
+import functools
+import time
+
+# Controlar o acesso concorrente a um metodo
+# Thread Safety
+def synchronized(wrapped):
+    lock = threading.Lock()
+    @functools.wraps(wrapped)
+    def _wrap(*args, **kwargs):
+        with lock: return wrapped(*args, **kwargs)
+    return _wrap
 
 class AgendaDAO:
     """Responsável por salvar e buscar Agendas e seus contatos no JSON."""
@@ -20,11 +32,14 @@ class AgendaDAO:
 
     # Aqui se o atributo inicializado for True, não sobreescreve o caminho até o arquivo com os dados
     # Ou seja, para outros objetos DAO o arquivo_dados será o mesmo
+    @synchronized
     def __init__(self, arquivo_dados="agendas_sistema.json"): # Inicializa o objeto criado
         if not hasattr(self, "_inicializado"): # Verifica se o objeto já criado possui um determinado atributo
             self.arquivo_dados = arquivo_dados
             self._inicializado = True
 
+    # Evitar que multiplas threads entrem aqui ao mesmo tempo!!!
+    @synchronized
     def _ler_arquivo(self):
         if not os.path.exists(self.arquivo_dados):
             return {}
@@ -34,10 +49,12 @@ class AgendaDAO:
         except Exception:
             return {}
 
+    @synchronized
     def _gravar_arquivo(self, dados):
         with open(self.arquivo_dados, "w", encoding="utf-8") as f:
             json.dump(dados, f, indent=4, ensure_ascii=False)
 
+    @synchronized
     def obter_agenda(self, nome_agenda):
         """Busca uma agenda pelo nome e reconstrói o objeto AgendaVO com seus Contatos."""
         todas_agendas = self._ler_arquivo()
@@ -49,22 +66,17 @@ class AgendaDAO:
         lista_contatos = []
 
         for c in dados_agenda["contatos"]:
-            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["idade"], c["email"]))
+            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
 
         return AgendaVO(nome_agenda, lista_contatos)
 
+    @synchronized
     def salvar_agenda(self, agenda_vo):
         """Salva ou atualiza uma agenda específica no arquivo JSON."""
         todas_agendas = self._ler_arquivo()
 
         contatos_dict = [
-            {
-                "id": c.id,
-                "nome": c.nome,
-                "telefone": c.telefone,
-                "idade": c.idade,
-                "email": c.email
-            }
+            {"id": c.id, "nome": c.nome, "telefone": c.telefone, "email": c.email}
             for c in agenda_vo.contatos
         ]
 
@@ -77,9 +89,9 @@ class AgendaDAO:
 
     # Aqui, futuramente, poderia ter outros caminhos para outros
     # tipos de arquivos ou BD
+    @synchronized
     def importar_contatos_dao(self):
         caminho_arquivo = Path(__file__).resolve().parents[2] / "contatos.txt"
-
         try:
             adapter = TXTContatoAdapter()
             return adapter.adaptar(caminho_arquivo)

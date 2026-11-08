@@ -45,6 +45,8 @@ class AgendaConsoleView(Observer):
                 print("» Memento restaurado com sucesso!")
             case "erro_memento":
                 print("» Erro ao tentar restaurar o memento!")
+            case "importar_contatos_sem_sucesso":
+                print("Nenhum contato foi importado. Verifique se os contatos já existem na agenda.")
 
 
     def iniciar(self):
@@ -101,8 +103,7 @@ class AgendaConsoleView(Observer):
         nome = input("Nome: ").strip()
         telefone = input("Telefone: ").strip()
         email = input("E-mail (opcional): ").strip()
-        idade = int(input("Idade: ").strip())
-        contato = ContatoVO(0,nome,telefone, idade, email)
+        contato = ContatoVO(0,nome,telefone,email)
         return self.agenda_facade.adicionar_contato(contato)
 
     def _listar(self):
@@ -116,45 +117,16 @@ class AgendaConsoleView(Observer):
 
         print(f"\n=== CONTATOS DA AGENDA: {self.nome_agenda.upper()} ===")
         for c in contatos:
-            print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
+            telefone = c.telefone
+            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"  # Formatação do telefone
+            print(f"ID: {c.id} | {c.nome} - 📞 {telefone} | ✉️ {c.email}")
 
     def _buscar(self):
-        print("\n🔍 === COMO DESEJA BUSCAR? ===")
-        print("1. Buscar só por Nome, E-mail ou Telefone")
-        print("2. Buscar só por Idade")
-        print("3. Buscar por Nome, E-mail ou Telefone E filtrar por Idade")
-
-        opcao = input("\nEscolha uma opção (1-3): ").strip()
-
-        item: str = ""
-        idade: int = 0
-
-        if opcao == "1":
-            item = input("Digite o nome, e-mail ou telefone: ").strip()
-            if not item:
-                print("⚠️ Campo de busca não pode ser vazio.")
-                return
-
-        elif opcao == "2":
-            try:
-                idade = int(input("Digite a idade: ").strip())
-            except ValueError:
-                print("⚠️ Digite um número inteiro válido para a idade.")
-                return
-
-        elif opcao == "3":
-            item = input("Digite o nome, e-mail ou telefone: ").strip()
-            try:
-                idade = int(input("Digite a idade para filtrar: ").strip())
-            except ValueError:
-                print("⚠️ Digite um número inteiro válido para a idade.")
-                return
-
-        else:
-            print("\n⚠️ Opção de busca inválida!")
-            return
-
-        resultados = self.agenda_facade.buscar_contatos(item, idade)
+        print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
+        nome = input("Filtrar por Nome: ").strip() or None
+        telefone = input("Filtrar por Telefone: ").strip() or None
+        email = input("Filtrar por E-mail: ").strip() or None
+        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0,nome,telefone,email)) #Controller
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -162,7 +134,9 @@ class AgendaConsoleView(Observer):
 
         print(f"\n🔍 Resultados encontrados ({len(resultados)}):")
         for c in resultados:
-            print(f"ID: {c.id} | {c.nome} - " f"📞 {c.telefone} | 🎂 {c.idade} anos | ✉️ {c.email}")
+            telefone = c.telefone
+            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"  # Formatação do telefone
+            print(f"ID: {c.id} | {c.nome} - " f"📞 {telefone} | ✉️ {c.email}")
 
     def _excluir(self):
         try:
@@ -173,7 +147,4 @@ class AgendaConsoleView(Observer):
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
 
-    def importar_contatos(self):
-        resultado = self.agenda_facade.importar_contatos_facade()
-        if not resultado:
-            print("Erro ao importar ou salvar os contatos no JSON.")
+    def importar_contatos(self): self.agenda_facade.importar_contatos_facade()

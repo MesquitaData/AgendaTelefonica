@@ -4,7 +4,10 @@ from Models.DAO.AgendaDAO import AgendaDAO
 from Models.memento.AgendaMemento import AgendaMemento
 from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
-
+from Controller.Validadores.ValidarNumero import ValidarNumero
+from Controller.Validadores.ValidarEmail import ValidarEmail
+from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 
 class AgendaBo:
     def __init__(self, nome_agenda):
@@ -36,13 +39,14 @@ class AgendaBo:
         if erro:
             return "Dados inválidos ou contato já existente!"
 
+        if len([c for c in self._agenda_ativa.contatos if contatoVO.nome in c.nome.lower() or contatoVO.telefone in c.telefone]) != 0:
+            return "Este contanto já exite nesta agenda !"
+
         # Se passou por toda a cadeia com sucesso, persiste os dados
-        telefone = contatoVO.telefone
-        contatoVO.telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}" # Formatação do telefone
         contatoVO.id = len(self._agenda_ativa.contatos) + 1
         self._agenda_ativa.contatos.append(contatoVO)
         self.dao.salvar_agenda(self._agenda_ativa)
-        return True
+        return None
 
     def excluir_contato(self, id_contato):
         contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]
@@ -58,8 +62,17 @@ class AgendaBo:
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-    def buscar_contatos(self, termo):
-         return [c for c in self._agenda_ativa.contatos if termo in c.nome.lower() or termo in c.telefone]
+    def buscar_contatos(self, contato):
+        busca = BuscarTodosContatos(self)  # Implementação do padrão decorator
+
+        if contato.telefone:
+            busca = FiltrarPorTelefone(busca, contato.telefone)
+        if contato.nome:
+            busca = FiltrarPorNome(busca, contato.nome)
+        if contato.email:
+            busca = FiltrarPorEmail(busca, contato.email)
+
+        return busca.buscar()  # Entregar à camada que a chamou a lista de contatos encontrados
 
     # PROJETO TRANSFORMANDO EM DECORATOR
     def listar_contatos(self):
@@ -74,14 +87,11 @@ class AgendaBo:
 
     def importar_contatos_bo(self):
         contatos = self.dao.importar_contatos_dao()
-        if not contatos:
-            return False
+        adicionado = 0
+        if not contatos: return False
         for contato in contatos:
-
-            # Verifica se o telefone já existe na agenda ativa
-            telefone_existe = self.buscar_contatos(contato.telefone)
-            if telefone_existe: continue
-            resultado = self.adicionar_contato(contato)
-            if resultado is not True: return False
-
-        return True
+            if not self.adicionar_contato(contato):
+                adicionado+=1
+                continue
+        if adicionado != 0: return True
+        return False
