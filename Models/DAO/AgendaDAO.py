@@ -37,6 +37,7 @@ class AgendaDAO:
         if not hasattr(self, "_inicializado"): # Verifica se o objeto já criado possui um determinado atributo
             self.arquivo_dados = arquivo_dados
             self._inicializado = True
+            self.lista_contatos = []
 
     # Evitar que multiplas threads entrem aqui ao mesmo tempo!!!
     @synchronized
@@ -63,12 +64,13 @@ class AgendaDAO:
             return AgendaVO(nome_agenda)  # Retorna uma agenda vazia se não existir
 
         dados_agenda = todas_agendas[nome_agenda]
-        lista_contatos = []
+
 
         for c in dados_agenda["contatos"]:
             lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
+            self.lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["idade"], c["email"]))
 
-        return AgendaVO(nome_agenda, lista_contatos)
+        return AgendaVO(nome_agenda, self.lista_contatos)
 
     @synchronized
     def salvar_agenda(self, agenda_vo):

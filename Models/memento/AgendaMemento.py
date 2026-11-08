@@ -7,4 +7,4 @@ class AgendaMemento:
 
     @property
     def contatos(self):
-        return copy.deepcopy(self._contatos)
+        return self._contatos
