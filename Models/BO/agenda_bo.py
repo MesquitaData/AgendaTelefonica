@@ -5,6 +5,7 @@ from Validadores.ValidarNome import ValidarNome
 from Controller.Validadores.ValidarNumero import ValidarNumero
 from Controller.Validadores.ValidarEmail import ValidarEmail
 from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 
 class AgendaBo:
     def __init__(self, nome_agenda):
@@ -51,8 +52,17 @@ class AgendaBo:
         return True
 
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
-    def buscar_contatos(self, termo):
-         return [c for c in self._agenda_ativa.contatos if termo in c.nome.lower() or termo in c.telefone]
+    def buscar_contatos_decorator(self, contato):
+        busca = BuscarTodosContatos(self)  # Implementação do padrão decorator
+
+        if contato.telefone:
+            busca = FiltrarPorTelefone(busca, contato.telefone)
+        if contato.nome:
+            busca = FiltrarPorNome(busca, contato.nome)
+        if contato.email:
+            busca = FiltrarPorEmail(busca, contato.email)
+
+        return busca.buscar()  # Entregar à camada que a chamou a lista de contatos encontrados
 
     # PROJETO TRANSFORMANDO EM DECORATOR
     def listar_contatos(self):
@@ -65,15 +75,19 @@ class AgendaBo:
         self._agenda_ativa = nova_agenda
         return True
 
+    def busca_contato(self,parametro):
+        for contato in self._agenda_ativa.contatos:
+            if parametro == contato.telefone: return True
+        return False
+        # return [c for c in self._agenda_ativa.contatos if parametro is not c.telefone]
+
     def importar_contatos_bo(self):
         contatos = self.dao.importar_contatos_dao()
         if not contatos:
             return False
         for contato in contatos:
-
-            # Verifica se o telefone já existe na agenda ativa
-            telefone_existe = self.buscar_contatos(contato.telefone)
-            if telefone_existe: continue
+            # telefone_existe = self.busca_contato(contato.telefone) # Verifica se o telefone já existe na agenda ativa
+            if self.busca_contato(contato.telefone): continue
             resultado = self.adicionar_contato(contato)
             if resultado is not True: return False
 
