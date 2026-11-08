@@ -1,9 +1,10 @@
 from Models.facade.AgendaFacade import AgendaFacade
 from Controller.observer.Observer import Observer
-from Models.command.Invocador import *
-from Models.command.ListarContatosCommand import *
-from Models.command.ExcluirContatoCommand import *
 from Models.VO.ContatoVO import ContatoVO
+from command.ExcluirContatoCommand import ExcluirContatoCommand
+from command.Invocador import Invocador
+from command.ListarContatosCommand import ListarContatosCommand
+
 
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
@@ -25,24 +26,28 @@ class AgendaConsoleView(Observer):
     def atualizar(self, evento: str, dados=None):
         """Este método é chamado automaticamente pelo Controller sempre que algo muda."""
         print("\n📢 [NOTIFICAÇÃO DO SISTEMA]")
-        if evento == "contato_adicionado":
-            telefone = dados.telefone
-            telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"
-            print(f"» Novo contato salvo em tempo real: Nome: {dados.nome} - Telefone: {telefone}")
-        elif evento == "contato_excluido":
-            print(f"» O contato com ID {dados} foi removido com sucesso da base de dados.")
-        elif evento == "alternar_agenda":
-            print(f"» A agenda foi alterada para a Agenda {dados.upper()}.")
-        elif evento == "buscar_contato":
-            print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
-        elif evento == "listar_contatos":
-            print(f"» Retornando os contatos salvos na agenda {dados}")
-        elif evento == "importar_contatos":
-            print(f"» Retornando os contatos salvos na agenda")
-        elif evento == "contato_existente":
-            print(f"» Esse contato telefônico já foi cadastrado no sistema!")
-        elif evento == "importar_contatos_sem_sucesso":
-            print("Nenhum contato foi importado. Verifique se os contatos já existem na agenda.")
+        match evento:
+            case "contato_adicionado":
+                print(f"» Novo contato salvo em tempo real: {dados.nome} ({dados.telefone})")
+            case "contato_excluido":
+                print(f"» O contato com ID {dados} foi removido com sucesso da base de dados.")
+            case "alternar_agenda":
+                print(f"» A agenda foi alterada para {self.nome_agenda.upper()}.")
+            case "buscar_contato":
+                print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
+            case "listar_contatos":
+                print(f"» Retornando os contatos salvos na agenda {dados}")
+            case "importar_contatos":
+                print("» Retornando os contatos salvos na agenda")
+            case "contato_existente":
+                print("» Esse contato telefônico já foi cadastrado no sistema!")
+            case "sucesso_memento":
+                print("» Memento restaurado com sucesso!")
+            case "erro_memento":
+                print("» Erro ao tentar restaurar o memento!")
+            case "importar_contatos_sem_sucesso":
+                print("Nenhum contato foi importado. Verifique se os contatos já existem na agenda.")
+
 
     def iniciar(self):
         while True:
@@ -55,9 +60,10 @@ class AgendaConsoleView(Observer):
             print("4. Excluir Contato")
             print("5. ALTERAR AGENDA (Pessoal ou Trabalho)")
             print("6. Importar contatos de arquivo TXT")
-            print("7. Sair")
+            print("7. Desfazer última alteração (ctrl-z)")
+            print("8. Sair")
 
-            opcao = input("\nEscolha uma opção (1-7): ").strip()
+            opcao = input("\nEscolha uma opção (1-8): ").strip()
 
             if opcao == "1":
                 self._adicionar()
@@ -70,8 +76,10 @@ class AgendaConsoleView(Observer):
             elif opcao == "5":
                 self._alternar_agenda()  # <- Nova funcionalidade da View
             elif opcao == "6":
-                self.importar_contatos()  # <- Funcionalidade Adapter
+                self.importar_contatos()
             elif opcao == "7":
+                self.agenda_facade.desfazer_alteracoes()
+            elif opcao == "8":
                 print("\n👋 Fechando o sistema... Até logo!")
                 break
             else:

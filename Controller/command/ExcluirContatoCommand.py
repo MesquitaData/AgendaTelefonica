@@ -1,4 +1,4 @@
-from Models.command.Cliente import Cliente
+from command.Cliente import Cliente
 
 class ExcluirContatoCommand(Cliente):
     def __init__(self, facade, id_contato):

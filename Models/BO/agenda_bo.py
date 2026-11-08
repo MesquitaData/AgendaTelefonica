@@ -1,6 +1,8 @@
-import random
+from Controller.Validadores.ValidarEmail import ValidarEmail
+from Controller.Validadores.ValidarNumero import ValidarNumero
 from Models.DAO.AgendaDAO import AgendaDAO
-from Models.VO.ContatoVO import ContatoVO
+from Models.memento.AgendaMemento import AgendaMemento
+from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
 from Controller.Validadores.ValidarNumero import ValidarNumero
 from Controller.Validadores.ValidarEmail import ValidarEmail
@@ -9,14 +11,21 @@ from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, Buscar
 
 class AgendaBo:
     def __init__(self, nome_agenda):
-        self._dao = None
+        self.dao = AgendaDAO()
         self._agenda_ativa = self.dao.obter_agenda(nome_agenda)
 
-    @property
-    def dao(self):
-        if self._dao is None:
-            self._dao = AgendaDAO()
-        return self._dao
+    # @property
+    # def dao(self):
+    #     if self._dao is None:
+    #         self._dao = AgendaDAO()
+    #     return self._dao
+
+    def criar_memento(self) -> AgendaMemento:
+        return AgendaMemento(self._agenda_ativa.contatos)
+
+    def restaurar_memento(self, memento: AgendaMemento) -> None:
+        self._agenda_ativa.contatos = memento.contatos
+        self.dao.salvar_agenda(self._agenda_ativa)
 
     def adicionar_contato(self, contatoVO):
         nome_validar = ValidarNome()
