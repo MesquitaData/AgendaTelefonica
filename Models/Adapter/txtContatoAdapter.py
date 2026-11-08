@@ -13,14 +13,13 @@ class TXTContatoAdapter:
                 campos = linha.split(";")
 
                 # Verifica se existem os três campos
-                if len(campos) != 4:
+                if len(campos) != 3:
                     raise ValueError(f"Linha {indice} possui formato inválido.")
-                nome, telefone, idade, email = campos
+                nome, telefone, email = campos
                 contato = ContatoVO(
                     indice,
                     nome.strip(),
                     telefone.strip(),
-                    int(idade),
                     email.strip()
                 )
                 contatos.append(contato)

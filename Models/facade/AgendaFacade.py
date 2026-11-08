@@ -1,6 +1,5 @@
 from Models.BO.agenda_bo import AgendaBo
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail, \
-    FiltrarPorIdade
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
 from memento.AgendaCaretaker import AgendaCaretaker
 
@@ -13,8 +12,10 @@ class AgendaFacade(Subject):
         self.caretaker = AgendaCaretaker(30)
 
     def importar_contatos_facade(self):
-        self.notificar("importar_contatos")
-        return self.agenda_bo.importar_contatos_bo()
+        resultado = self.agenda_bo.importar_contatos_bo()
+        if resultado: self.notificar("importar_contatos")
+        else: self.notificar("importar_contatos_sem_sucesso")
+        return resultado
 
     def adicionar_contato(self,contatoVO):
         memento = self.agenda_bo.criar_memento()
@@ -56,24 +57,10 @@ class AgendaFacade(Subject):
         self.notificar("contatos_listados",self._nome_agenda)
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, nomeemailtelefone:str="", idade=0):
-        busca = FiltrarPorIdade(BuscarTodosContatos(self.agenda_bo), idade=idade) \
-            if idade != 0 else BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
-
-        if nomeemailtelefone:
-            nome = FiltrarPorNome(busca, nomeemailtelefone).buscar()
-            email = FiltrarPorEmail(busca, nomeemailtelefone).buscar()
-            telefone = FiltrarPorTelefone(busca, nomeemailtelefone).buscar()
-
-            if len(nome): return nome
-
-            if len(telefone): return telefone
-
-            if len(email):return email
-
-            return []
-        return [] if idade == 0 else busca.buscar()
+    def buscar_contatos(self, contato):
+        self.notificar("buscar_contatos",self._nome_agenda)
+        return self.agenda_bo.buscar_contatos(contato=contato) # Entregar à camada que a chamou a lista de contatos encontrados
 
     def alternar_agenda(self, nome_agenda):
-        self.notificar("alternar_agenda")
+        self.notificar("alternar_agenda",nome_agenda)
         return self.agenda_bo.alternar_agenda(nome_agenda)
