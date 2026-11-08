@@ -1,10 +1,9 @@
-import random
-from Models.DAO.AgendaDAO import AgendaDAO
-from Models.VO.ContatoVO import ContatoVO
-from Validadores.ValidarNome import ValidarNome
-from Controller.Validadores.ValidarNumero import ValidarNumero
 from Controller.Validadores.ValidarEmail import ValidarEmail
-from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
+from Controller.Validadores.ValidarNumero import ValidarNumero
+from Models.DAO.AgendaDAO import AgendaDAO
+from Validadores.ValidarDuplicidade import ValidarDuplicidade
+from Validadores.ValidarNome import ValidarNome
+
 
 class AgendaBo:
     def __init__(self, nome_agenda):
@@ -28,11 +27,6 @@ class AgendaBo:
         erro = nome_validar.validar(contatoVO) # validação em cadeia a partir da validação de nome
         if erro:
             return "Dados inválidos ou contato já existente!"
-        # Ideia provisoria - talvez dê pra colocar no validador
-        if len([c for c in self._agenda_ativa.contatos if contatoVO.nome in c.nome.lower() or contatoVO.telefone in c.telefone]) != 0:
-        # is_empty = lambda contatos:len(contatos) == 0
-        # if not is_empty(self.buscar_contatos(nome)) or not is_empty(self.buscar_contatos(telefone)):
-            return "Este contanto já exite nesta agenda !"
 
         # Se passou por toda a cadeia com sucesso, persiste os dados
         telefone = contatoVO.telefone
