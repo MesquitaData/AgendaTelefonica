@@ -18,10 +18,10 @@ class AgendaBo:
     #     return self._dao
 
     def criar_memento(self) -> AgendaMemento:
-        return AgendaMemento(self._agenda_ativa)
+        return AgendaMemento(self._agenda_ativa.contatos)
 
     def restaurar_memento(self, memento: AgendaMemento) -> None:
-        self._agenda_ativa.memento = memento
+        self._agenda_ativa.contatos = memento.contatos
         self.dao.salvar_agenda(self._agenda_ativa)
 
     def adicionar_contato(self, contatoVO):

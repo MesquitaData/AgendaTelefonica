@@ -37,16 +37,9 @@
             },
             {
                 "id": 3,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "idade": 28,
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 4,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "idade": 28,
+                "nome": "renan",
+                "telefone": "(34) 23423-4234",
+                "idade": 23,
                 "email": ""
             }
         ]
