@@ -1,5 +1,5 @@
-from Models.BO import agenda_bo
 from Models.BO.agenda_bo import AgendaBo
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
 
 class AgendaFacade(Subject):
@@ -39,9 +39,18 @@ class AgendaFacade(Subject):
         self.notificar("contatos_listados",self._nome_agenda)
         return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
 
-    def buscar_contatos(self, contatoVO):
+    def buscar_contatos(self, nome=None, telefone=None, email=None):
         self.notificar("buscar_contatos",self._nome_agenda)
-        return self.agenda_bo.buscar_contatos_decorator(contatoVO) # Implementação do padrão decorator
+        busca = BuscarTodosContatos(self.agenda_bo) # Implementação do padrão decorator
+
+        if nome:
+            busca = FiltrarPorNome(busca, nome)
+        if telefone:
+            busca = FiltrarPorTelefone(busca, telefone)
+        if email:
+            busca = FiltrarPorEmail(busca, email)
+
+        return busca.buscar() # Entregar à camada que a chamou a lista de contatos encontrados
 
     def alternar_agenda(self, nome_agenda):
         self.notificar("alternar_agenda")

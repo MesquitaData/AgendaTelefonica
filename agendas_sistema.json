@@ -40,176 +40,38 @@
             },
             {
                 "id": 7,
-                "nome": "Khabib Nurmagomedov",
+                "nome": "Islam Machashev",
                 "telefone": "(99) 99999-9999",
                 "email": ""
             },
             {
                 "id": 8,
-                "nome": "Umar",
+                "nome": "Khabib Nurmagomedov",
                 "telefone": "(99) 99999-9999",
                 "email": ""
             },
             {
                 "id": 9,
-                "nome": "Usman Nurmagomedov",
+                "nome": "Umar",
                 "telefone": "(99) 99999-9999",
                 "email": ""
             },
             {
                 "id": 10,
+                "nome": "Usman Nurmagomedov",
+                "telefone": "(99) 99999-9999",
+                "email": ""
+            },
+            {
+                "id": 11,
                 "nome": "Issac Gadzhiev",
                 "telefone": "(81) 99922-1134",
                 "email": ""
             },
             {
-                "id": 11,
+                "id": 12,
                 "nome": "Ibrahim Ibrahimov",
                 "telefone": "(67) 99934-5567",
-                "email": ""
-            },
-            {
-                "id": 12,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 13,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 14,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 15,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "email": ""
-            },
-            {
-                "id": 16,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 17,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 18,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 19,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "email": ""
-            },
-            {
-                "id": 20,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 21,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 22,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 23,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "email": ""
-            },
-            {
-                "id": 24,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 25,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 26,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 27,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "email": ""
-            },
-            {
-                "id": 28,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 29,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 30,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 31,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
-                "email": ""
-            },
-            {
-                "id": 32,
-                "nome": "Maria Silva",
-                "telefone": "((8) 7) 99-999-1111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 33,
-                "nome": "João Santos",
-                "telefone": "((8) 7) 98-888-2222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 34,
-                "nome": "Pedro Souza",
-                "telefone": "((8) 7) 97-777-3333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 35,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "((8) 7) 99-914-4009",
                 "email": ""
             }
         ]

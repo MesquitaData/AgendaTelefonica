@@ -12,9 +12,14 @@ class AgendaConsoleView(Observer):
         super().__init__()
         self.nome_agenda = "Pessoal"
         self.agenda_facade = AgendaFacade(nome_agenda=self.nome_agenda)
-        self._invocador = Invocador()
         self.agenda_facade.inscrever(self)
-        self._contatos = None  # Lazy Loading
+        self._invocador = None  # Lazy Loading, pois command só existe para listar e excluir
+
+    # Cria o atributo invocador
+    @property
+    def invocador(self):
+        if self._invocador is None: self._invocador = Invocador()
+        return self._invocador
 
     # Implementação padrão Observer, que observará a Facade
     def atualizar(self, evento: str, dados=None):
@@ -90,15 +95,16 @@ class AgendaConsoleView(Observer):
         return self.agenda_facade.adicionar_contato(contato)
 
     def _listar(self):
-        self._invocador.definir_comando(ListarContatosCommand(self.agenda_facade))
-        self._contatos = self._invocador.executar_comando()
+        comando = ListarContatosCommand(self.agenda_facade)
+        self.invocador.definir_comando(comando)
+        contatos = self._invocador.executar_comando()
 
-        if not self._contatos:
+        if not contatos:
             print(f"\n📭 A agenda '{self.nome_agenda}' está vazia.")
             return
 
         print(f"\n=== CONTATOS DA AGENDA: {self.nome_agenda.upper()} ===")
-        for c in self._contatos:
+        for c in contatos:
             print(f"ID: {c.id} | {c.nome} - 📞 {c.telefone} | ✉️ {c.email}")
 
     def _buscar(self):
@@ -106,7 +112,7 @@ class AgendaConsoleView(Observer):
         nome = input("Filtrar por Nome: ").strip() or None
         telefone = input("Filtrar por Telefone: ").strip() or None
         email = input("Filtrar por E-mail: ").strip() or None
-        resultados = self.agenda_facade.buscar_contatos(ContatoVO(None,nome,telefone,email)) #Controller
+        resultados = self.agenda_facade.buscar_contatos(nome, telefone, email) #Controller
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -120,7 +126,7 @@ class AgendaConsoleView(Observer):
         try:
             id_excluir = int(input("\nDigite o ID do contato para remover: "))
             comando = ExcluirContatoCommand(self.agenda_facade, id_excluir)
-            self._invocador.definir_comando(comando)
+            self.invocador.definir_comando(comando)
             self._invocador.executar_comando()
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
