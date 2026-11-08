@@ -1,4 +1,4 @@
-from Models.command.Cliente import Cliente
+from command.Cliente import Cliente
 
 class ListarContatosCommand(Cliente):
     def __init__(self, facade):

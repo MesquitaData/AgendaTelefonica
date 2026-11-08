@@ -1,9 +1,10 @@
 from Models.facade.AgendaFacade import AgendaFacade
 from Controller.observer.Observer import Observer
-from Models.command.Invocador import *
-from Models.command.ListarContatosCommand import *
-from Models.command.ExcluirContatoCommand import *
 from Models.VO.ContatoVO import ContatoVO
+from command.ExcluirContatoCommand import ExcluirContatoCommand
+from command.Invocador import Invocador
+from command.ListarContatosCommand import ListarContatosCommand
+
 
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
