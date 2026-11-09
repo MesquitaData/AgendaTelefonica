@@ -73,7 +73,7 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
     ```
   8. Abstract Factory
   9. Chain of responsibility [X]
-  10. memento
+  10. memento [X]
   11. command [X]
   12. singleton [X]
   13. template method
