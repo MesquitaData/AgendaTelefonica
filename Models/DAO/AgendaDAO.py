@@ -1,12 +1,13 @@
+import functools
 import json
 import os
-from pathlib import Path
-from Models.VO.ContatoVO import ContatoVO
-from Models.VO.AgendaVO import AgendaVO
-from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
 import threading
-import functools
-import time
+from pathlib import Path
+
+from Models.Adapter.txtContatoAdapter import TXTContatoAdapter
+from Models.VO.AgendaVO import AgendaVO
+from Models.VO.ContatoVO import ContatoVO
+
 
 # Controlar o acesso concorrente a um metodo
 # Thread Safety
@@ -67,8 +68,7 @@ class AgendaDAO:
 
 
         for c in dados_agenda["contatos"]:
-            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
-            self.lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["idade"], c["email"]))
+            self.lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
 
         return AgendaVO(nome_agenda, self.lista_contatos)
 
