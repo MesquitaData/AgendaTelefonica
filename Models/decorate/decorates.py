@@ -54,14 +54,14 @@ class FiltrarPorTelefone(FiltroDecorator):
         contatos = super().buscar()
         return [contato for contato in contatos if self.telefone == contato.telefone]
 
-class FiltrarPorIdade(FiltroDecorator):
-    def __init__(self, component: BuscarComponent, idade: int):
-        super().__init__(component)
-        self.idade = idade
-
-    def buscar(self):
-        contatos = super().buscar()
-        return [contato for contato in contatos if self.idade == contato.idade]
+# class FiltrarPorIdade(FiltroDecorator):
+#     def __init__(self, component: BuscarComponent, idade: int):
+#         super().__init__(component)
+#         self.idade = idade
+#
+#     def buscar(self):
+#         contatos = super().buscar()
+#         return [contato for contato in contatos if self.idade == contato.idade]
 
 
 
