@@ -14,13 +14,7 @@ class AgendaConsoleView(Observer):
         self.nome_agenda = "Pessoal"
         self.agenda_facade = AgendaFacade(nome_agenda=self.nome_agenda)
         self.agenda_facade.inscrever(self)
-        self._invocador = None  # Lazy Loading, pois command só existe para listar e excluir
-
-    # Cria o atributo invocador
-    @property
-    def invocador(self):
-        if self._invocador is None: self._invocador = Invocador()
-        return self._invocador
+        self._invocador = Invocador()
 
     # Implementação padrão Observer, que observará a Facade
     def atualizar(self, evento: str, dados=None):
@@ -28,11 +22,13 @@ class AgendaConsoleView(Observer):
         print("\n📢 [NOTIFICAÇÃO DO SISTEMA]")
         match evento:
             case "contato_adicionado":
-                print(f"» Novo contato salvo em tempo real: {dados.nome} ({dados.telefone})")
+                telefone = dados.telefone
+                telefone = f"({telefone[:2]}) {telefone[2:7]}-{telefone[7:]}"
+                print(f"» Novo contato salvo em tempo real. Nome: {dados.nome} - Telefone: {telefone}")
             case "contato_excluido":
                 print(f"» O contato com ID {dados} foi removido com sucesso da base de dados.")
             case "alternar_agenda":
-                print(f"» A agenda foi alterada para {self.nome_agenda.upper()}.")
+                print(f"» A agenda foi alterada para AGENDA {dados.upper()}.")
             case "buscar_contato":
                 print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
             case "listar_contatos":
@@ -40,7 +36,7 @@ class AgendaConsoleView(Observer):
             case "importar_contatos":
                 print("» Retornando os contatos salvos na agenda")
             case "contato_existente":
-                print("» Esse contato telefônico já foi cadastrado no sistema!")
+                print(f"» {dados}")
             case "sucesso_memento":
                 print("» Memento restaurado com sucesso!")
             case "erro_memento":
@@ -109,7 +105,7 @@ class AgendaConsoleView(Observer):
 
     def _listar(self):
         comando = ListarContatosCommand(self.agenda_facade)
-        self.invocador.definir_comando(comando)
+        self._invocador.definir_comando(comando)
         contatos = self._invocador.executar_comando()
 
         if not contatos:
@@ -123,9 +119,9 @@ class AgendaConsoleView(Observer):
             print(f"ID: {c.id} | {c.nome} - 📞 {telefone} | ✉️ {c.email}")
 
     def _buscar(self):
-        print("\n🔍 Filtros de Busca:")
+        print("\n🔍 Filtros de Busca:\n")
         nome = telefone = email = ""
-        opcao_filtro = input("Qual filtro deseja usar para a busca? 1- Nome; 2- Telefone; ou 3- Email: ").strip()
+        opcao_filtro = input("Qual filtro deseja usar para a busca ?\n1- Nome\n2- Telefone\n3- Email\nInforme a opção: ").strip()
         match opcao_filtro:
             case "1":
                 nome = input("Filtrar por Nome: ").strip()
@@ -151,7 +147,7 @@ class AgendaConsoleView(Observer):
         try:
             id_excluir = int(input("\nDigite o ID do contato para remover: "))
             comando = ExcluirContatoCommand(self.agenda_facade, id_excluir)
-            self.invocador.definir_comando(comando)
+            self._invocador.definir_comando(comando)
             self._invocador.executar_comando()
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")

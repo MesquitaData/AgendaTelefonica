@@ -4,50 +4,26 @@
         "contatos": [
             {
                 "id": 1,
-                "nome": "Gabriel ben Judah",
+                "nome": "Gabriel ibn Yahya",
                 "telefone": "87999144404",
-                "email": "gmesquita@gmail.com"
+                "email": ""
             },
             {
                 "id": 2,
-                "nome": "Yehudah HaNassi",
-                "telefone": "87999144404",
-                "email": ""
-            },
-            {
-                "id": 3,
-                "nome": "David ben Gabriel",
-                "telefone": "81987893233",
-                "email": ""
-            },
-            {
-                "id": 4,
-                "nome": "Maria Silva",
-                "telefone": "87999991111",
-                "email": "maria@email.com"
-            },
-            {
-                "id": 5,
-                "nome": "João Santos",
-                "telefone": "87988882222",
-                "email": "joao@email.com"
-            },
-            {
-                "id": 6,
-                "nome": "Pedro Souza",
-                "telefone": "87977773333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 7,
                 "nome": "Gabriel Mesquita Gomes",
                 "telefone": "87999144009",
                 "email": ""
             },
             {
-                "id": 8,
-                "nome": "Gabriel Yahya ibn Bakr",
-                "telefone": "87999221477",
+                "id": 3,
+                "nome": "Islam Makhachev",
+                "telefone": "57921245678",
+                "email": ""
+            },
+            {
+                "id": 4,
+                "nome": "Khabib Nurmagomedov",
+                "telefone": "88990097766",
                 "email": ""
             }
         ]

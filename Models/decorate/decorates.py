@@ -13,7 +13,7 @@ class BuscarComponent(ABC):
 # Utiliza os metodos disponibilizados pela camada de negocio
 class BuscarTodosContatos(BuscarComponent):
     def __init__(self, agenda_bo):
-        self.contatos = agenda_bo.listar_contatos()  # Ocorre a recuperação dos contatos
+        self.contatos = agenda_bo._agenda_ativa.contatos  # Ocorre a recuperação dos contatos
 
     def buscar(self):
         return self.contatos
@@ -53,16 +53,3 @@ class FiltrarPorTelefone(FiltroDecorator):
     def buscar(self):
         contatos = super().buscar()
         return [contato for contato in contatos if self.telefone == contato.telefone]
-
-# class FiltrarPorIdade(FiltroDecorator):
-#     def __init__(self, component: BuscarComponent, idade: int):
-#         super().__init__(component)
-#         self.idade = idade
-#
-#     def buscar(self):
-#         contatos = super().buscar()
-#         return [contato for contato in contatos if self.idade == contato.idade]
-
-
-
-

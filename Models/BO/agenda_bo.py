@@ -14,12 +14,6 @@ class AgendaBo:
         self.dao = AgendaDAO()
         self._agenda_ativa = self.dao.obter_agenda(nome_agenda)
 
-    # @property
-    # def dao(self):
-    #     if self._dao is None:
-    #         self._dao = AgendaDAO()
-    #     return self._dao
-
     def criar_memento(self) -> AgendaMemento:
         return AgendaMemento(self._agenda_ativa.contatos)
 
@@ -39,9 +33,6 @@ class AgendaBo:
         if erro:
             return "Dados inválidos ou contato já existente!"
 
-        if len([c for c in self._agenda_ativa.contatos if contatoVO.nome in c.nome.lower() or contatoVO.telefone in c.telefone]) != 0:
-            return "Este contanto já exite nesta agenda !"
-
         # Se passou por toda a cadeia com sucesso, persiste os dados
         contatoVO.id = len(self._agenda_ativa.contatos) + 1
         self._agenda_ativa.contatos.append(contatoVO)
@@ -53,10 +44,10 @@ class AgendaBo:
 
         if len(self._agenda_ativa.contatos) == len(contatos_filtrados):
             return False
-        self._agenda_ativa.contatos = contatos_filtrados
+        self._agenda_ativa._contatos = contatos_filtrados
 
         # Reajusta os IDs dos contatos
-        for novo_id, contato in enumerate(self._agenda_ativa.contatos, start=1):
+        for novo_id, contato in enumerate(self._agenda_ativa._contatos, start=1):
             contato.id = novo_id
         self.dao.salvar_agenda(self._agenda_ativa)
         return True
@@ -73,10 +64,6 @@ class AgendaBo:
             busca = FiltrarPorEmail(busca, contato.email)
 
         return busca.buscar()  # Entregar à camada que a chamou a lista de contatos encontrados
-
-    # PROJETO TRANSFORMANDO EM DECORATOR
-    def listar_contatos(self):
-        return self._agenda_ativa.contatos
 
     def alternar_agenda(self, nome_agenda):
         nova_agenda = self.dao.obter_agenda(nome_agenda)
