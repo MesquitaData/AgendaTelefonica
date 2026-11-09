@@ -13,7 +13,7 @@ class BuscarComponent(ABC):
 # Utiliza os metodos disponibilizados pela camada de negocio
 class BuscarTodosContatos(BuscarComponent):
     def __init__(self, agenda_bo):
-        self.contatos = agenda_bo.listar_contatos()  # Ocorre a recuperação dos contatos
+        self.contatos = agenda_bo._agenda_ativa.contatos  # Ocorre a recuperação dos contatos
 
     def buscar(self):
         return self.contatos

@@ -23,7 +23,7 @@ class AgendaFacade(Subject):
         # Se o Business Object retornar uma mensagem de erro, notifica aos observadores(controller)
         # que esse contato telefônico já existe na agenda!!!
         if isinstance(retorno, str):
-            self.notificar("contato_existente",contatoVO)
+            self.notificar("contato_existente",retorno)
             return
 
         self.caretaker.salvar(memento)
@@ -55,7 +55,7 @@ class AgendaFacade(Subject):
     # Métodos de listagem e busca não alteram o estado, então não precisam notificar
     def listar_contatos(self):
         self.notificar("contatos_listados",self._nome_agenda)
-        return self.agenda_bo.listar_contatos() # Encaminha a solicitação para a camada de negócio.
+        return self.agenda_bo._agenda_ativa.contatos # Encaminha a solicitação para a camada de negócio.
 
     def buscar_contatos(self, contato):
         self.notificar("buscar_contatos",self._nome_agenda)

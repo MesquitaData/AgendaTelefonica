@@ -37,7 +37,6 @@ class AgendaDAO:
         if not hasattr(self, "_inicializado"): # Verifica se o objeto já criado possui um determinado atributo
             self.arquivo_dados = arquivo_dados
             self._inicializado = True
-            self.lista_contatos = []
 
     # Evitar que multiplas threads entrem aqui ao mesmo tempo!!!
     @synchronized
@@ -57,36 +56,27 @@ class AgendaDAO:
 
     @synchronized
     def obter_agenda(self, nome_agenda):
-        """Busca uma agenda pelo nome e reconstrói o objeto AgendaVO com seus Contatos."""
-        todas_agendas = self._ler_arquivo()
+        return AgendaVO(nome_agenda,self) # Lazy Inicialitation
 
-        if nome_agenda not in todas_agendas:
-            return AgendaVO(nome_agenda)  # Retorna uma agenda vazia se não existir
-
-        dados_agenda = todas_agendas[nome_agenda]
-
-
-        for c in dados_agenda["contatos"]:
-            lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["email"]))
-            self.lista_contatos.append(ContatoVO(c["id"], c["nome"], c["telefone"], c["idade"], c["email"]))
-
-        return AgendaVO(nome_agenda, self.lista_contatos)
+    @synchronized
+    def obter_contatos(self, nome_agenda):
+        dados = self._ler_arquivo().get(nome_agenda, {})
+        return [ContatoVO(c["id"],c["nome"],c["telefone"],c["email"])
+            for c in dados.get("contatos", [])
+        ]
 
     @synchronized
     def salvar_agenda(self, agenda_vo):
         """Salva ou atualiza uma agenda específica no arquivo JSON."""
         todas_agendas = self._ler_arquivo()
-
         contatos_dict = [
             {"id": c.id, "nome": c.nome, "telefone": c.telefone, "email": c.email}
             for c in agenda_vo.contatos
         ]
-
         todas_agendas[agenda_vo.nome] = {
             "nome": agenda_vo.nome,
             "contatos": contatos_dict
         }
-
         self._gravar_arquivo(todas_agendas)
 
     # Aqui, futuramente, poderia ter outros caminhos para outros

@@ -6,5 +6,5 @@ class ListarContatosCommand(Cliente):
 
     def executar(self):
         print("[COMMAND] Executando ListarContatosCommand...")
-        contatos = self.facade.listar_contatos()
+        contatos = self.facade.agenda_bo._agenda_ativa.contatos
         return contatos
