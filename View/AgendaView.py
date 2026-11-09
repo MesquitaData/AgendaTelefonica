@@ -65,25 +65,26 @@ class AgendaConsoleView(Observer):
 
             opcao = input("\nEscolha uma opção (1-8): ").strip()
 
-            if opcao == "1":
-                self._adicionar()
-            elif opcao == "2":
-                self._listar()
-            elif opcao == "3":
-                self._buscar()
-            elif opcao == "4":
-                self._excluir()
-            elif opcao == "5":
-                self._alternar_agenda()  # <- Nova funcionalidade da View
-            elif opcao == "6":
-                self.importar_contatos()
-            elif opcao == "7":
-                self.agenda_facade.desfazer_alteracoes()
-            elif opcao == "8":
-                print("\n👋 Fechando o sistema... Até logo!")
-                break
-            else:
-                print("\n⚠️ Opção inválida!")
+            match opcao:
+                case "1":
+                    self._adicionar()
+                case "2":
+                    self._listar()
+                case "3":
+                    self._buscar()
+                case "4":
+                    self._excluir()
+                case "5":
+                    self._alternar_agenda()  # <- Nova funcionalidade da View
+                case "6":
+                    self.importar_contatos()
+                case "7":
+                    self.agenda_facade.desfazer_alteracoes()
+                case "8":
+                    print("\n👋 Fechando o sistema... Até logo!")
+                    break
+                case _:
+                    print("\n⚠️ Opção inválida!")
 
     def _alternar_agenda(self):
         nova_agenda = (
@@ -122,11 +123,19 @@ class AgendaConsoleView(Observer):
             print(f"ID: {c.id} | {c.nome} - 📞 {telefone} | ✉️ {c.email}")
 
     def _buscar(self):
-        print("\n🔍 Filtros de Busca (pressione Enter para ignorar um filtro):")
-        nome = input("Filtrar por Nome: ").strip() or None
-        telefone = input("Filtrar por Telefone: ").strip() or None
-        email = input("Filtrar por E-mail: ").strip() or None
-        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0,nome,telefone,email)) #Controller
+        print("\n🔍 Filtros de Busca:")
+        nome = telefone = email = ""
+        opcao_filtro = input("Qual filtro deseja usar para a busca? 1- Nome; 2- Telefone; ou 3- Email: ").strip()
+        match opcao_filtro:
+            case "1":
+                nome = input("Filtrar por Nome: ").strip()
+            case "2":
+                telefone = input("Filtrar por Telefone: ").strip()
+            case "3":
+                email = input("Filtrar por E-mail: ").strip()
+            case _:
+                return
+        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0, nome, telefone, email)) #Controller
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
