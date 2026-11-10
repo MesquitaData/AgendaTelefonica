@@ -1,9 +1,8 @@
 import copy
 
-
 class AgendaMemento:
     def __init__(self, contatos: list):
-        self._contatos = copy.deepcopy(contatos)
+        self._contatos = copy.deepcopy(contatos)  # Realiza uma cópia sem endereçar ao mesmo espaço de memória
 
     @property
     def contatos(self):

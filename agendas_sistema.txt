@@ -1,0 +1,21 @@
+Trabalho;1;Daoud ibn Jabril;55987654433;
+Trabalho;2;Gabriel Mesquita Gomes;87999144009;
+Trabalho;3;Islam Makhachev;57921245678;
+Trabalho;4;Khabib Nurmagomedov;88990097766;
+Trabalho;5;Pedro Souza;87977773333;pedro@email.com
+Trabalho;6;Umar Umayyad Gadzhiev;67980045567;
+Trabalho;7;Magomed Magomedov;99990908877;
+Trabalho;8;Gabriel ibn Yahya ibn Haysh HaNassi;67988773212;
+Trabalho;9;Usman Mamedov;88996554788;
+Trabalho;10;Gabriel ibn Yahya;87999144404;
+Trabalho;11;Vasili Lomachenko;55966778899;
+Pessoal;1;Daoud ibn Jabril;55987654433;
+Pessoal;2;Gabriel Mesquita Gomes;87999144009;
+Pessoal;3;Islam Makhachev;57921245678;
+Pessoal;4;Khabib Nurmagomedov;88990097766;
+Pessoal;5;Umar Umayyad Gadzhiev;67980045567;
+Pessoal;6;Magomed Magomedov;99990908877;
+Pessoal;7;Gabriel ibn Yahya ibn Haysh HaNassi;67988773212;
+Pessoal;8;Usman Mamedov;88996554788;
+Pessoal;9;Vasili Lomachenko;55966778899;
+Pessoal;10;Pedro Souza;87977773333;pedro@email.com

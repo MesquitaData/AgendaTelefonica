@@ -71,7 +71,7 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
         print(controller.consultar_usuario(2))
 
     ```
-  8. Abstract Factory
+  8. Abstract Factory [X]
   9. Chain of responsibility [X]
   10. memento [X]
   11. command [X]

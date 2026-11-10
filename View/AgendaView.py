@@ -5,14 +5,17 @@ from command.ExcluirContatoCommand import ExcluirContatoCommand
 from command.Invocador import Invocador
 from command.ListarContatosCommand import ListarContatosCommand
 
-
 class AgendaConsoleView(Observer):
     """Interface de usuário com suporte a múltiplas agendas."""
-    def __init__(self):
-        # O programa inicia na agenda Pessoal por padrão
+    def __init__(self, fabrica):
         super().__init__()
         self.nome_agenda = "Pessoal"
-        self.agenda_facade = AgendaFacade(nome_agenda=self.nome_agenda)
+
+        # A fábrica é repassada à Facade
+        self.agenda_facade = AgendaFacade(
+            fabrica=fabrica,
+            nome_agenda=self.nome_agenda
+        )
         self.agenda_facade.inscrever(self)
         self._invocador = Invocador()
 
@@ -55,7 +58,7 @@ class AgendaConsoleView(Observer):
             print("3. Buscar Contato")
             print("4. Excluir Contato")
             print("5. ALTERAR AGENDA (Pessoal ou Trabalho)")
-            print("6. Importar contatos de arquivo TXT")
+            print("6. Importar contatos")
             print("7. Desfazer última alteração (ctrl-z)")
             print("8. Sair")
 
