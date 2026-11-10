@@ -1,16 +1,14 @@
+from Models.memento.AgendaMemento import AgendaMemento
 from Controller.Validadores.ValidarEmail import ValidarEmail
 from Controller.Validadores.ValidarNumero import ValidarNumero
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Models.memento.AgendaMemento import AgendaMemento
+from Models.template_method.agenda_service_template import AgendaServiceTemplate
 from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
-from Controller.Validadores.ValidarNumero import ValidarNumero
-from Controller.Validadores.ValidarEmail import ValidarEmail
-from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
-from Models.Adapter.ContatoAdapter import *
 
-class AgendaBo:
 
+class AgendaBo(AgendaServiceTemplate):
     def __init__(self, nome_agenda, fabrica):
         # A fábrica fornece os DAOs concretos
         self.agenda_dao = fabrica.criar_agenda_dao()
@@ -99,7 +97,7 @@ class AgendaBo:
         self._agenda_ativa = nova_agenda
         return True
 
-    def importar_contatos_bo(self):
+    def importar_contatos(self):
         contatos = self.contato_dao.importar_contatos(self._agenda_ativa.nome)
         if not contatos: return False
         adicionados = 0
