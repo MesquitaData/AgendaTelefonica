@@ -1,7 +1,5 @@
 from collections import deque
-
 from Models.memento.AgendaMemento import AgendaMemento
-
 
 class AgendaCaretaker:
     def __init__(self, limite_historico:int = 10):

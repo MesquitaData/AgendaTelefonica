@@ -1,4 +1,0 @@
-Maria Silva;87999991111;maria@email.com
-João Santos;87988882222;joao@email.com
-Pedro Souza;87977773333;pedro@email.com
-Gabriel Mesquita Gomes;87999144009;

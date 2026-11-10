@@ -1,9 +1,13 @@
-from Models.DAO.AgendaDAO import AgendaDAO
+from Models.DAO.TXTAgendaDAO import TXTAgendaDAO
+from Models.DAO.JSONAgendaDAO import JSONAgendaDAO
 
-dao1 = AgendaDAO()
-dao2 = AgendaDAO()
+txt1 = TXTAgendaDAO()
+txt2 = TXTAgendaDAO()
 
-print("DAO 1:", id(dao1))
-print("DAO 2:", id(dao2))
+json1 = JSONAgendaDAO()
+json2 = JSONAgendaDAO()
 
-print("Mesma instância:", dao1 is dao2)
+print("TXT Singleton:", txt1 is txt2)
+print("JSON Singleton:", json1 is json2)
+
+print("TXT e JSON são a mesma instância:", txt1 is json1)
