@@ -1,6 +1,8 @@
 from Controller.Validadores.ValidarEmail import ValidarEmail
 from Controller.Validadores.ValidarNumero import ValidarNumero
+from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Models.memento.AgendaMemento import AgendaMemento
+from Models.template_method.ImportarContatosTemplate import ImportarContatoTemplate
 from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
 from Controller.Validadores.ValidarNumero import ValidarNumero
@@ -9,8 +11,9 @@ from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Models.Adapter.ContatoAdapter import *
 
-class AgendaBo:
 
+
+class AgendaBo(ImportarContatoTemplate):
     def __init__(self, nome_agenda, fabrica):
         # A fábrica fornece os DAOs concretos
         self.agenda_dao = fabrica.criar_agenda_dao()
@@ -35,7 +38,7 @@ class AgendaBo:
         self._agenda_ativa.contatos = memento.contatos
         self._salvar_contatos()
 
-    def adicionar_contato(self, contatoVO):
+    def adicionar_contato(self, contato):
         nome_validar = ValidarNome()
         numero_validar = ValidarNumero()
         email_validar = ValidarEmail()
@@ -43,12 +46,12 @@ class AgendaBo:
 
         nome_validar.set_proximo(numero_validar).set_proximo(email_validar).set_proximo(duplicidade_validar)
 
-        erro = nome_validar.validar(contatoVO)
+        erro = nome_validar.validar(contato)
         if erro:
             return "Dados inválidos ou contato já existente!"
 
-        contatoVO.id = len(self._agenda_ativa.contatos) + 1
-        self._agenda_ativa.contatos.append(contatoVO)
+        contato.id = len(self._agenda_ativa.contatos) + 1
+        self._agenda_ativa.contatos.append(contato)
         self._salvar_contatos()
 
         return None
@@ -89,17 +92,11 @@ class AgendaBo:
         return self._agenda_ativa.contatos # Aproveita o Lazy Loading e o cache da AgendaVO
 
     def alternar_agenda(self, nome_agenda):
-        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda)
+        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
         if nova_agenda is None:
             return False
         self._agenda_ativa = nova_agenda
         return True
 
-    def importar_contatos_bo(self):
-        contatos = self.agenda_dao.importar_contatos(self._agenda_ativa.nome)
-        if not contatos: return False
-        adicionados = 0
-        for contato in contatos:
-            resultado = self.adicionar_contato(contato)
-            if resultado is None: adicionados += 1
-        return adicionados > 0
+    def get_contatos_importados(self):
+        return self.contato_dao.importar_contatos(self._agenda_ativa.nome)
