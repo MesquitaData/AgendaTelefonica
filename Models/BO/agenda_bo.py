@@ -5,12 +5,6 @@ from Models.memento.AgendaMemento import AgendaMemento
 from Models.template_method.ImportarContatosTemplate import ImportarContatoTemplate
 from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
-from Controller.Validadores.ValidarNumero import ValidarNumero
-from Controller.Validadores.ValidarEmail import ValidarEmail
-from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
-from Models.Adapter.ContatoAdapter import *
-
 
 
 class AgendaBo(ImportarContatoTemplate):
@@ -92,11 +86,11 @@ class AgendaBo(ImportarContatoTemplate):
         return self._agenda_ativa.contatos # Aproveita o Lazy Loading e o cache da AgendaVO
 
     def alternar_agenda(self, nome_agenda):
-        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
+        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda,self.agenda_dao)
         if nova_agenda is None:
             return False
         self._agenda_ativa = nova_agenda
         return True
 
     def get_contatos_importados(self):
-        return self.contato_dao.importar_contatos(self._agenda_ativa.nome)
+        return self.agenda_dao.importar_contatos(self._agenda_ativa.nome)

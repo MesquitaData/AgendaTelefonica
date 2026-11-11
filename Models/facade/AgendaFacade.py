@@ -1,8 +1,6 @@
-from Models.BO.agenda_bo import AgendaBo
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
 from Models.BO.agenda_bo import AgendaBo
-from memento.AgendaCaretaker import AgendaCaretaker
+from Models.memento.AgendaCaretaker import AgendaCaretaker
 
 
 class AgendaFacade(Subject):
