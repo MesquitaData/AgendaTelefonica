@@ -96,7 +96,7 @@ class TXTAgendaDAO(AgendaDAO):
     @synchronized
     def obter_agenda(self, nome_agenda):
         agendas = self.ler_arquivo()
-        if nome_agenda not in agendas: return None
+        if nome_agenda not in agendas: self.criar_agenda(nome_agenda)
         return AgendaVO(nome_agenda, self)
 
     @synchronized
@@ -125,3 +125,12 @@ class TXTAgendaDAO(AgendaDAO):
         except (OSError, ValueError, KeyError, TypeError) as erro:
             print(f"Erro na importação: {type(erro).__name__}: {erro}")
             return []
+
+    @synchronized
+    def criar_agenda(self, nome_agenda):
+        agendas = self.ler_arquivo()
+        if nome_agenda not in agendas:
+            with open(self.caminho, "a", encoding="utf-8", newline="") as arquivo:
+                escritor = csv.writer(arquivo, delimiter=";")
+                escritor.writerow([nome_agenda])
+        return AgendaVO(nome_agenda, self)

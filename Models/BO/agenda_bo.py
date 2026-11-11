@@ -1,31 +1,15 @@
-from Controller.Validadores.ValidarEmail import ValidarEmail
-from Controller.Validadores.ValidarNumero import ValidarNumero
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Models.memento.AgendaMemento import AgendaMemento
 from Models.template_method.ImportarContatosTemplate import ImportarContatoTemplate
-from Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Validadores.ValidarNome import ValidarNome
 from Controller.Validadores.ValidarNumero import ValidarNumero
 from Controller.Validadores.ValidarEmail import ValidarEmail
 from Controller.Validadores.ValidarDuplicidade import ValidarDuplicidade
 from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
-from Models.Adapter.ContatoAdapter import *
-
-
 
 class AgendaBo(ImportarContatoTemplate):
-    def __init__(self, nome_agenda, fabrica):
-        # A fábrica fornece os DAOs concretos
-        self.agenda_dao = fabrica.criar_agenda_dao()
-        # self.contato_dao = fabrica.criar_contato_dao()
-
-        # O ContatoDAO é injetado na AgendaVO para permitir Lazy Loading
+    def __init__(self,fabrica,nome_agenda):
+        self.agenda_dao = fabrica.criar_agenda_dao()  # A fábrica fornece os DAOs concretos
         self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda)
-
-        # Cria a agenda caso ela ainda não exista
-        if self._agenda_ativa is None:
-            self.agenda_dao.salvar_agenda(nome_agenda,[])
-            self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda)
 
     def _salvar_contatos(self):
         # Centraliza a persistência dos contatos da agenda ativa.
@@ -57,21 +41,14 @@ class AgendaBo(ImportarContatoTemplate):
         return None
 
     def excluir_contato(self, id_contato):
-
-        contatos_filtrados = [
-            c for c in self._agenda_ativa.contatos
-            if c.id != id_contato
-        ]
-
+        contatos_filtrados = [c for c in self._agenda_ativa.contatos if c.id != id_contato]
         if len(self._agenda_ativa.contatos) == len(contatos_filtrados):
             return False
 
-        # Utiliza o setter da propriedade contatos da AgendaVO
-        self._agenda_ativa.contatos = contatos_filtrados
+        self._agenda_ativa.contatos = contatos_filtrados # Utiliza o setter da propriedade contatos da AgendaVO
 
         # Reajusta os IDs dos contatos
         for novo_id, contato in enumerate(self._agenda_ativa.contatos, start=1): contato.id = novo_id
-
         self._salvar_contatos()
         return True
 
@@ -88,15 +65,9 @@ class AgendaBo(ImportarContatoTemplate):
 
         return busca.buscar()
 
-    def listar_contatos(self):
-        return self._agenda_ativa.contatos # Aproveita o Lazy Loading e o cache da AgendaVO
-
     def alternar_agenda(self, nome_agenda):
-        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
-        if nova_agenda is None:
-            return False
-        self._agenda_ativa = nova_agenda
-        return True
+        self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda)
+        return self._agenda_ativa
 
     def get_contatos_importados(self):
-        return self.contato_dao.importar_contatos(self._agenda_ativa.nome)
+        return self.agenda_dao.importar_contatos(self._agenda_ativa.nome)

@@ -1,19 +1,14 @@
-from Models.BO.agenda_bo import AgendaBo
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
 from Models.BO.agenda_bo import AgendaBo
-from memento.AgendaCaretaker import AgendaCaretaker
-
+from Models.memento.AgendaCaretaker import AgendaCaretaker
 
 class AgendaFacade(Subject):
-
-    def __init__(self, fabrica, nome_agenda: str = "Pessoal"):
+    def __init__(self,fabrica,nome_agenda):
         super().__init__()
-        self._nome_agenda = nome_agenda
-        self.agenda_bo = AgendaBo(nome_agenda, fabrica) # Injeta a fábrica na camada de negócio
+        self.agenda_bo = AgendaBo(fabrica,nome_agenda) # Injeta a fábrica na camada de negócio
         self.caretaker = AgendaCaretaker(30)
 
-    def importar_contatos(self):
+    def importar_contatos_facade(self):
         resultado = self.agenda_bo.executar_importacao()
         if resultado:
             self.notificar("importar_contatos")
@@ -54,18 +49,10 @@ class AgendaFacade(Subject):
         self.notificar("sucesso_memento")
         return True
 
-    def listar_contatos(self):
-        resultado = self.agenda_bo.listar_contatos()
-        self.notificar("contatos_listados", self._nome_agenda)
-        return resultado
-
-    def buscar_contatos(self, contato):
-        self.notificar("buscar_contatos", self._nome_agenda)
+    def buscar_contatos(self, contato,nome_agenda):
+        self.notificar("buscar_contatos", nome_agenda)
         return self.agenda_bo.buscar_contatos(contato)
 
-    def alternar_agenda(self, nome_agenda):
-        resultado = self.agenda_bo.alternar_agenda(nome_agenda)
-        if resultado:
-            self._nome_agenda = nome_agenda
-            self.notificar("alternar_agenda", nome_agenda)
-        return resultado
+    def alternar_agenda_facade(self, nome_agenda):
+        self.notificar("alternar_agenda", nome_agenda)
+        return self.agenda_bo.alternar_agenda(nome_agenda)
