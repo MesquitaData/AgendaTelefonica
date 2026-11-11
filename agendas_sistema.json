@@ -4,127 +4,68 @@
         "contatos": [
             {
                 "id": 1,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "87999144009",
-                "email": ""
-            },
-            {
-                "id": 2,
-                "nome": "Islam Makhachev",
-                "telefone": "57921245678",
-                "email": ""
-            },
-            {
-                "id": 3,
-                "nome": "Khabib Nurmagomedov",
-                "telefone": "88990097766",
-                "email": ""
-            },
-            {
-                "id": 4,
-                "nome": "Pedro Souza",
-                "telefone": "87977773333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 5,
-                "nome": "Umar Umayyad Gadzhiev",
-                "telefone": "67980045567",
-                "email": ""
-            },
-            {
-                "id": 6,
-                "nome": "Magomed Magomedov",
-                "telefone": "99990908877",
-                "email": ""
-            },
-            {
-                "id": 7,
-                "nome": "Vasili Lomachenko",
-                "telefone": "55966778899",
-                "email": ""
-            },
-            {
-                "id": 8,
                 "nome": "Daoud ibn Jabril",
                 "telefone": "55987654433",
                 "email": ""
             },
             {
-                "id": 9,
+                "id": 2,
+                "nome": "Gabriel Mesquita Gomes",
+                "telefone": "87999144009",
+                "email": ""
+            },
+            {
+                "id": 3,
+                "nome": "Islam Makhachev",
+                "telefone": "57921245678",
+                "email": ""
+            },
+            {
+                "id": 4,
+                "nome": "Khabib Nurmagomedov",
+                "telefone": "88990097766",
+                "email": ""
+            },
+            {
+                "id": 5,
+                "nome": "Pedro Souza",
+                "telefone": "87977773333",
+                "email": "pedro@email.com"
+            },
+            {
+                "id": 6,
+                "nome": "Umar Umayyad Gadzhiev",
+                "telefone": "67980045567",
+                "email": ""
+            },
+            {
+                "id": 7,
+                "nome": "Magomed Magomedov",
+                "telefone": "99990908877",
+                "email": ""
+            },
+            {
+                "id": 8,
                 "nome": "Gabriel ibn Yahya ibn Haysh HaNassi",
                 "telefone": "67988773212",
                 "email": ""
             },
             {
-                "id": 10,
+                "id": 9,
                 "nome": "Usman Mamedov",
                 "telefone": "88996554788",
                 "email": ""
-            }
-        ]
-    },
-    "Trabalho": {
-        "nome": "Trabalho",
-        "contatos": [
+            },
             {
-                "id": 1,
+                "id": 10,
                 "nome": "Gabriel ibn Yahya",
                 "telefone": "87999144404",
                 "email": ""
             },
             {
-                "id": 2,
-                "nome": "Gabriel Mesquita Gomes",
-                "telefone": "87999144009",
-                "email": ""
-            },
-            {
-                "id": 3,
-                "nome": "Islam Makhachev",
-                "telefone": "57921245678",
-                "email": ""
-            },
-            {
-                "id": 4,
-                "nome": "Khabib Nurmagomedov",
-                "telefone": "88990097766",
-                "email": ""
-            },
-            {
-                "id": 5,
-                "nome": "Pedro Souza",
-                "telefone": "87977773333",
-                "email": "pedro@email.com"
-            },
-            {
-                "id": 6,
-                "nome": "Umar Umayyad Gadzhiev",
-                "telefone": "67980045567",
-                "email": ""
-            },
-            {
-                "id": 7,
-                "nome": "Magomed Magomedov",
-                "telefone": "99990908877",
-                "email": ""
-            },
-            {
-                "id": 8,
+                "id": 11,
                 "nome": "Vasili Lomachenko",
                 "telefone": "55966778899",
-                "email": ""
-            },
-            {
-                "id": 9,
-                "nome": "Daoud ibn Jabril",
-                "telefone": "55987654433",
-                "email": ""
-            },
-            {
-                "id": 10,
-                "nome": "Gabriel ibn Yahya ibn Haysh HaNassi",
-                "telefone": "67988773212",
                 "email": ""
             }
         ]

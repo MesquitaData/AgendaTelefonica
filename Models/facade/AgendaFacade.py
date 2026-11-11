@@ -1,10 +1,9 @@
-from Models.BO.agenda_bo import AgendaBo
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
-from Models.template_method.agenda_service_template import AgendaServiceTemplate
+from Models.BO.agenda_bo import AgendaBo
 from memento.AgendaCaretaker import AgendaCaretaker
 
-class AgendaFacade(Subject, AgendaServiceTemplate):
+
+class AgendaFacade(Subject):
 
     def __init__(self, fabrica, nome_agenda: str = "Pessoal"):
         super().__init__()
@@ -13,7 +12,7 @@ class AgendaFacade(Subject, AgendaServiceTemplate):
         self.caretaker = AgendaCaretaker(30)
 
     def importar_contatos(self):
-        resultado = self.agenda_bo.importar_contatos()
+        resultado = self.agenda_bo.executar_importacao()
         if resultado:
             self.notificar("importar_contatos")
         else:
