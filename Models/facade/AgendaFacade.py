@@ -1,7 +1,7 @@
-from Models.BO.agenda_bo import AgendaBo
-from Models.decorate.decorates import FiltrarPorNome, FiltrarPorTelefone, BuscarTodosContatos, FiltrarPorEmail
 from Controller.observer.Observer import Subject
+from Models.BO.agenda_bo import AgendaBo
 from memento.AgendaCaretaker import AgendaCaretaker
+
 
 class AgendaFacade(Subject):
 
@@ -11,8 +11,8 @@ class AgendaFacade(Subject):
         self.agenda_bo = AgendaBo(nome_agenda, fabrica) # Injeta a fábrica na camada de negócio
         self.caretaker = AgendaCaretaker(30)
 
-    def importar_contatos_facade(self):
-        resultado = self.agenda_bo.importar_contatos_bo()
+    def importar_contatos(self):
+        resultado = self.agenda_bo.executar_importacao()
         if resultado:
             self.notificar("importar_contatos")
         else:

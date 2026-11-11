@@ -1,10 +1,10 @@
 import csv
+import threading
 from pathlib import Path
+
 from Models.Adapter.ContatoAdapter import JSONContatoAdapter
-from Models.DAO import ContatoDAOAbstract
 from Models.DAO.ContatoDAOAbstract import ContatoDAO
 from Models.VO.ContatoVO import ContatoVO
-import threading
 from Models.synchronized import synchronized
 
 # Bloqueio compartilhado para operações no arquivo TXT.

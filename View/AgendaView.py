@@ -155,4 +155,4 @@ class AgendaConsoleView(Observer):
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
 
-    def importar_contatos(self): self.agenda_facade.importar_contatos_facade()
+    def importar_contatos(self): self.agenda_facade.importar_contatos()

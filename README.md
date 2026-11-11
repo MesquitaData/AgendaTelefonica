@@ -80,4 +80,4 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   14. BO (business object) [X]
   15. decorate [X]
   16. adapter [X]
-## Funcionalidades
+
