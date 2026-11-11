@@ -1,20 +1,27 @@
-from Models.AbstractFactory.FabricaTXT import TXTDAOFactory
 from View.AgendaView import AgendaConsoleView
-from Models.AbstractFactory.FabricaJSON import JSONDAOFactory
+from Models.AbstractFactory.FabricaAgendasDAO import JSONDAOFactory
+from Models.AbstractFactory.FabricaAgendasDAO import TXTDAOFactory
 
 def login():
-    print("\n📢 [REALIZE O LOGIN]\n")
-    print("» 1. Login com persistência .JSON")
-    print("» 2. Login com persistência .TXT\n")
-    opcao = int(input("Escolha a opcao de login: "))
-    return opcao
+    while True:
+        print("\n📢 [SELECIONE A PERSISTÊNCIA]\n")
+        print("» 1. Persistência JSON")
+        print("» 2. Persistência TXT")
+        print("» 0. Sair\n")
+        opcao = input("Escolha a opção: ").strip()
+        if opcao in ("0", "1", "2"):
+            return opcao
+        print("\nOpção inválida! Tente novamente.")
 
 if __name__ == "__main__":
     escolha = login()
     match escolha:
-        case 1:
-            app = AgendaConsoleView(JSONDAOFactory())
-            app.iniciar()
-        case 2:
-            app = AgendaConsoleView(TXTDAOFactory())
-            app.iniciar()
+        case "1":
+            fabrica = JSONDAOFactory()
+        case "2":
+            fabrica = TXTDAOFactory()
+        case "0":
+            print("Encerrando o sistema...")
+            exit()
+    app = AgendaConsoleView(fabrica)
+    app.iniciar()

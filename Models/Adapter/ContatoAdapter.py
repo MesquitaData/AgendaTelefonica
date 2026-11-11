@@ -16,7 +16,7 @@ class JSONContatoAdapter(ContatoAdapter):
         ]
 
 class TXTContatoAdapter(ContatoAdapter):
-    def adaptar(self, caminho_arquivo,nome_agenda=""):
+    def adaptar(self, caminho_arquivo,nome_agenda):
         contatos = []
         with open(caminho_arquivo,"r",encoding="utf-8") as arquivo:
             for indice, linha in enumerate(arquivo, start=1):

@@ -14,19 +14,19 @@ class AgendaBo:
     def __init__(self, nome_agenda, fabrica):
         # A fábrica fornece os DAOs concretos
         self.agenda_dao = fabrica.criar_agenda_dao()
-        self.contato_dao = fabrica.criar_contato_dao()
+        # self.contato_dao = fabrica.criar_contato_dao()
 
         # O ContatoDAO é injetado na AgendaVO para permitir Lazy Loading
-        self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
+        self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda)
 
         # Cria a agenda caso ela ainda não exista
         if self._agenda_ativa is None:
-            self.agenda_dao.salvar_agenda(nome_agenda)
-            self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
+            self.agenda_dao.salvar_agenda(nome_agenda,[])
+            self._agenda_ativa = self.agenda_dao.obter_agenda(nome_agenda)
 
     def _salvar_contatos(self):
-        """Centraliza a persistência dos contatos da agenda ativa."""
-        self.contato_dao.salvar_contatos(self._agenda_ativa.nome,self._agenda_ativa.contatos)
+        # Centraliza a persistência dos contatos da agenda ativa.
+        self.agenda_dao.salvar_agenda(self._agenda_ativa.nome,self._agenda_ativa.contatos)
 
     def criar_memento(self) -> AgendaMemento:
         return AgendaMemento(self._agenda_ativa.contatos)
@@ -67,13 +67,9 @@ class AgendaBo:
         self._agenda_ativa.contatos = contatos_filtrados
 
         # Reajusta os IDs dos contatos
-        for novo_id, contato in enumerate(
-            self._agenda_ativa.contatos, start=1
-        ):
-            contato.id = novo_id
+        for novo_id, contato in enumerate(self._agenda_ativa.contatos, start=1): contato.id = novo_id
 
         self._salvar_contatos()
-
         return True
 
     def buscar_contatos(self, contato):
@@ -93,14 +89,14 @@ class AgendaBo:
         return self._agenda_ativa.contatos # Aproveita o Lazy Loading e o cache da AgendaVO
 
     def alternar_agenda(self, nome_agenda):
-        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda,self.contato_dao)
+        nova_agenda = self.agenda_dao.obter_agenda(nome_agenda)
         if nova_agenda is None:
             return False
         self._agenda_ativa = nova_agenda
         return True
 
     def importar_contatos_bo(self):
-        contatos = self.contato_dao.importar_contatos(self._agenda_ativa.nome)
+        contatos = self.agenda_dao.importar_contatos(self._agenda_ativa.nome)
         if not contatos: return False
         adicionados = 0
         for contato in contatos:

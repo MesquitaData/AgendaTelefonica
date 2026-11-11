@@ -86,11 +86,7 @@ class AgendaConsoleView(Observer):
                     print("\n⚠️ Opção inválida!")
 
     def _alternar_agenda(self):
-        nova_agenda = (
-            input("\nDigite o nome da agenda que deseja acessar: ")
-            .strip()
-            .capitalize()
-        )
+        nova_agenda = (input("\nDigite o nome da agenda que deseja acessar: ").strip().capitalize())
         if nova_agenda in ["Pessoal", "Trabalho"]:
             if self.agenda_facade.alternar_agenda(nova_agenda):
                 self.nome_agenda = nova_agenda
