@@ -76,7 +76,7 @@ Agenda de contatos feita inteiramente em python para a cadeira de **Arquitetura 
   10. memento [X]
   11. command [X]
   12. singleton [X]
-  13. template method
+  13. template method [X]
   14. BO (business object) [X]
   15. decorate [X]
   16. adapter [X]

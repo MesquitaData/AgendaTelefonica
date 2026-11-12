@@ -2,6 +2,7 @@ from Controller.observer.Observer import Subject
 from Models.BO.agenda_bo import AgendaBo
 from Models.memento.AgendaCaretaker import AgendaCaretaker
 
+
 class AgendaFacade(Subject):
     def __init__(self,fabrica,nome_agenda):
         super().__init__()
