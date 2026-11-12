@@ -12,6 +12,3 @@ class AgendaCaretaker:
         if not self._pilha_desfazer:
             return None
         return self._pilha_desfazer.pop()
-
-    # def tem_historico(self) -> bool:
-    #     return len(self._pilha_desfazer) > 0

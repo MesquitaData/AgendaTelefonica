@@ -1,5 +1,5 @@
 class AgendaVO:
-    def __init__(self, nome_agenda, dao):
+    def __init__(self, nome_agenda,dao):
         self.nome = nome_agenda
         self.dao = dao
         self._contatos = None  # Lazy Initialization

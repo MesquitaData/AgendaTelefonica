@@ -34,8 +34,6 @@ class AgendaConsoleView(Observer):
                 print(f"» A agenda foi alterada para AGENDA {dados.upper()}.")
             case "buscar_contato":
                 print(f"» Resultado da busca dos contatos salvos na agenda {dados}")
-            case "listar_contatos":
-                print(f"» Retornando os contatos salvos na agenda {dados}")
             case "importar_contatos":
                 print("» Retornando os contatos salvos na agenda")
             case "contato_existente":
@@ -87,13 +85,10 @@ class AgendaConsoleView(Observer):
 
     def _alternar_agenda(self):
         nova_agenda = (input("\nDigite o nome da agenda que deseja acessar: ").strip().capitalize())
-        if nova_agenda in ["Pessoal", "Trabalho"]:
-            if self.agenda_facade.alternar_agenda(nova_agenda):
-                self.nome_agenda = nova_agenda
-            else:
-                print("\n⚠️ Não foi possível acessar a agenda.")
+        if nova_agenda in ["Pessoal","Trabalho"]:
+            self.nome_agenda = self.agenda_facade.alternar_agenda_facade(nova_agenda).nome
         else:
-            print("\n⚠️ Nome inválido.")
+            print("Informe uma opção válida de agenda!!!")
 
     def _adicionar(self):
         nome = input("Nome: ").strip()
@@ -130,7 +125,7 @@ class AgendaConsoleView(Observer):
                 email = input("Filtrar por E-mail: ").strip()
             case _:
                 return
-        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0, nome, telefone, email)) #Controller
+        resultados = self.agenda_facade.buscar_contatos(ContatoVO(0, nome, telefone, email),self.nome_agenda) #Controller
 
         if not resultados:
             print("\n❌ Nenhum contato encontrado com os critérios informados.")
@@ -151,4 +146,4 @@ class AgendaConsoleView(Observer):
         except ValueError:
             print("\n⚠️ Digite um número de ID válido.")
 
-    def importar_contatos(self): self.agenda_facade.importar_contatos()
+    def importar_contatos(self): self.agenda_facade.importar_contatos_facade()
